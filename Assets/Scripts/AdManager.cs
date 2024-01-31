@@ -144,7 +144,6 @@ public class AdManager : MonoBehaviour
     }
     public void loadInterstitial()
     {
-
         interstitial = new InterstitialAd(interstitialAdId);
         AdRequest request = new AdRequest.Builder().Build();
         interstitial.LoadAd(request);

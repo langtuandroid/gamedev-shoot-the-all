@@ -1,17 +1,19 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+
 public class PlayerController : MonoBehaviour
 {
-    public GameObject leftArm, RightArm;
-    public GameObject LeftGun, RightGun;
-    public GameObject LLL;
-    public GameObject RRR;
-    public bool leftArmWork, RightArmWork, SuperBullet;
+    public GameObject LeftShoulder, RightShoulder, Head;
+    public Transform Gun;
+    public Transform PlayerModel;
+    public bool SuperBullet;
     public bool active;
     public bool shoot;
-    private float mousex, xxx;
+    public bool isLookAtGun;
+    public bool isXArmRotation;
+    private float xxx;
     private float x, y;
     private int i;
     public GameObject workingarm;
@@ -20,53 +22,89 @@ public class PlayerController : MonoBehaviour
     private Collider[] incolliders;
     private Rigidbody[] rigidbodies;
     private BoxCollider[] boxColliders;
+    float workingArmRotation = 0f;
+
     void Start()
     {
         i = 0;
         active = false;
-        removerigandcol();
-        if (leftArmWork)
+        RemoveRigAndCol();
+        XandYofPresent(workingarm);
+        if (workingarm == null)
         {
-            LeftGun.SetActive(true);
-            RightGun.SetActive(false);
-            workingarm = leftArm;
-            XandYofPresent(workingarm);
-        }
-        else if (RightArmWork)
-        {
-            RightGun.SetActive(true);
-            LeftGun.SetActive(false);
-            workingarm = RightArm;
-            XandYofPresent(workingarm);
-        }
-        else
-        {
-            refbotpostions();
-            RightGun.SetActive(false);
-            LeftGun.SetActive(false);
+            // RefBotPositions();
             GetComponent<Animator>().enabled = true;
         }
-        if(AdManager.instance)
-        {
-            AdManager.instance.loadInterstitial();
-            AdManager.instance.showBannerAd();
-        }
     }
+
+    float yRotationMin = 20f;
+    float yRotationMax = 160f;
+    
     void Update()
     {
+        if (isLookAtGun)
+        {
+            LeftShoulder.transform.LookAt(Gun);
+            RightShoulder.transform.LookAt(Gun);
+            Head.transform.LookAt(Gun);
+            Gun.transform.localRotation = Quaternion.Euler(0, 0, -xxx);
+            //Debug.Log("new rotation: " + workingarm.transform.localEulerAngles);// Math.Abs(Gun.transform.localEulerAngles.z) * 0.9f);
+            PlayerModel.transform.localEulerAngles =
+                new Vector3(0f, Math.Abs(Gun.transform.localRotation.eulerAngles.z) * 0.9f, 0f);
+
+
+            var tempWorkingArmRotation = Math.Abs(workingArmRotation);
+
+            if (tempWorkingArmRotation > 360)
+            {
+                if (tempWorkingArmRotation % 360f < 180)
+                {
+                    tempWorkingArmRotation %= 180f;
+                }
+                else
+                {
+                    tempWorkingArmRotation %= 360f;
+                }
+            }
+            
+            Debug.Log("new rotation: " + tempWorkingArmRotation);
+            float yRotation;
+
+            if (tempWorkingArmRotation is >= 0 and < 180)
+            {
+                yRotation = Mathf.Lerp(yRotationMin, yRotationMax, Mathf.InverseLerp(0f, 180f, tempWorkingArmRotation));
+            }
+            else
+            {
+                yRotation = Mathf.Lerp(yRotationMax, yRotationMin, Mathf.InverseLerp(180f, 360f, tempWorkingArmRotation));
+            }
+
+            // Debug.Log("new rotation: " + yRotation);
+            // Применение вращения ко второму объекту
+            PlayerModel.transform.localRotation = Quaternion.Euler(0f, yRotation, 0f);
+        }
+
         if (active)
         {
             if (Input.GetMouseButton(0))
             {
-                mousex = Input.GetAxis("Mouse X");
-                xxx += mousex;
-                workingarm.transform.localRotation = Quaternion.Euler(x, y, xxx);
+                xxx += Input.GetAxis("Mouse X");
+                xxx -= Input.GetAxis("Mouse Y");
+                workingArmRotation += Input.GetAxis("Mouse X");
+                workingArmRotation -= Input.GetAxis("Mouse Y");
+                // if (workingArmRotation < 0)
+                // {
+                //     workingArmRotation += 360f;
+                // }
+                workingarm.transform.localRotation = isXArmRotation ? Quaternion.Euler(xxx, y, x) : Quaternion.Euler(x, y, xxx);
             }
         }
+
         if (shoot && bullet != null)
         {
             active = false;
-            bullet.transform.position = Vector3.MoveTowards(bullet.transform.position, ListOfPoints[i], 10 * Time.deltaTime);
+            bullet.transform.position =
+                Vector3.MoveTowards(bullet.transform.position, ListOfPoints[i], 10 * Time.deltaTime);
             if (bullet.transform.position == ListOfPoints[i])
             {
                 if (i < ListOfPoints.Count - 1)
@@ -81,29 +119,29 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+
         if (shoot && bullet == null)
         {
             active = true;
         }
     }
+
     public void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Bullet")
+        if (collision.gameObject.CompareTag("Bullet"))
         {
             KillThisBot();
             Destroy(bullet);
             Destroy(collision.gameObject);
         }
-        if (collision.gameObject.tag == "SuperBullet")
-        {
-            KillThisBot();
-        }
-        if (collision.gameObject.tag == "Hit")
+
+        if (collision.gameObject.CompareTag("SuperBullet") || collision.gameObject.CompareTag("Hit"))
         {
             KillThisBot();
         }
     }
-    public void removerigandcol()
+
+    public void RemoveRigAndCol()
     {
         GetComponent<Animator>().enabled = false;
         incolliders = GetComponentsInChildren<Collider>();
@@ -113,29 +151,35 @@ public class PlayerController : MonoBehaviour
         {
             boxColliders[i].transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ;
         }
+
         for (int i = 0; i < incolliders.Length; i++)
         {
             incolliders[i].enabled = false;
         }
+
         for (int i = 0; i < rigidbodies.Length; i++)
         {
             rigidbodies[i].isKinematic = true;
         }
+
         CapsuleCollider cc = GetComponent<CapsuleCollider>();
         cc.enabled = true;
         cc.height = 1.85f;
         cc.center = new Vector3(0, 0.85f, 0);
     }
+
     public void KillThisBot()
     {
         for (int i = 0; i < incolliders.Length; i++)
         {
             incolliders[i].enabled = true;
         }
+
         for (int i = 0; i < rigidbodies.Length; i++)
         {
             rigidbodies[i].isKinematic = false;
         }
+
         transform.GetComponent<CapsuleCollider>().enabled = false;
         GetComponent<Animator>().enabled = false;
         if (gameObject.tag == "Emeny")
@@ -143,35 +187,30 @@ public class PlayerController : MonoBehaviour
             tag = "Untagged";
             GameManager.Instance.killcount();
         }
-        else if(gameObject.tag=="Player")
+        else if (gameObject.tag == "Player")
         {
             UiManager.Instance.LevelFail();
         }
-        LeftGun.SetActive(false);
-        RightGun.SetActive(false);
+
+        Gun.gameObject.SetActive(false);
         Destroy(GetComponent<PlayerController>());
-        if(AudioManager.instance)
+        if (AudioManager.instance)
         {
             AudioManager.instance.Play("Hit");
         }
     }
+
     public void Shoot()
     {
-        if (RightArmWork && active)
-        {
-            sendbullet(RightGun);
-        }
-        if (leftArmWork && active)
-        {
-            sendbullet(LeftGun);
-        }
+        if (active) SendBullet();
     }
-    public void sendbullet(GameObject gun)
+
+    private void SendBullet()
     {
         i = 0;
         ListOfPoints.Clear();
-        Vector3[] temparray = new Vector3[gun.GetComponent<LineRenderer>().positionCount];
-        gun.GetComponent<LineRenderer>().GetPositions(temparray);
+        Vector3[] temparray = new Vector3[Gun.GetComponent<LineRenderer>().positionCount];
+        Gun.GetComponent<LineRenderer>().GetPositions(temparray);
         ListOfPoints = temparray.ToList();
         bullet = Instantiate(GameManager.Instance.Bullet, ListOfPoints[0], Quaternion.identity);
         shoot = true;
@@ -179,57 +218,70 @@ public class PlayerController : MonoBehaviour
         {
             bullet.tag = "SuperBullet";
         }
-        if(AudioManager.instance)
+
+        if (AudioManager.instance)
         {
             AudioManager.instance.Play("Bullet");
         }
     }
+
     public void DanceForWin()
     {
-        refbotpostions();
+        // RefBotPositions();
         GetComponent<Animator>().enabled = true;
-//GetComponent<Animator>().SetTrigger("Dance");
-        RightGun.GetComponent<RaycastReflection>().enabled = false;
-        RightGun.GetComponent<LineRenderer>().enabled = false;
-        LeftGun.SetActive(false);
-        RightGun.SetActive(false);
+        Gun.GetComponent<RaycastReflection>().enabled = false;
+        Gun.GetComponent<LineRenderer>().enabled = false;
+        Gun.gameObject.SetActive(false);
         active = false;
 
     }
+
     public void XandYofPresent(GameObject workingarm)
     {
-        x = workingarm.transform.localEulerAngles.x;
-        y = workingarm.transform.localEulerAngles.y;
-        xxx = workingarm.transform.localEulerAngles.z;
+        if (isXArmRotation)
+        {
+            x = workingarm.transform.localEulerAngles.z;
+            y = workingarm.transform.localEulerAngles.y;
+            xxx = workingarm.transform.localEulerAngles.x;
+        }
+        else
+        {
+            x = workingarm.transform.localEulerAngles.x;
+            y = workingarm.transform.localEulerAngles.y;
+            xxx = workingarm.transform.localEulerAngles.z;
+        }
+
         active = true;
     }
-    public void refbotpostions()
-    {
-        GetComponent<Animator>().enabled = false;
-        if (GameManager.Instance)
-        {
-            LLL = GameManager.Instance.LLL;
-            RRR = GameManager.Instance.RRR;
-        }
-        leftArm.name = LLL.transform.GetChild(0).name;
-        RightArm.name = RRR.transform.GetChild(0).name;
-        GameObject lll = leftArm.transform.parent.gameObject;
-        GameObject rrr = RightArm.transform.parent.gameObject;
-        lll.transform.localPosition = LLL.transform.localPosition;
-        lll.transform.localEulerAngles = LLL.transform.localEulerAngles;
-        lll.transform.GetChild(0).transform.localPosition = LLL.transform.GetChild(0).transform.localPosition;
-        lll.transform.GetChild(0).transform.localEulerAngles = LLL.transform.GetChild(0).transform.localEulerAngles;
-        lll.transform.GetChild(0).GetChild(0).transform.localPosition =
-            LLL.transform.GetChild(0).GetChild(0).transform.localPosition;
-        lll.transform.GetChild(0).GetChild(0).transform.localEulerAngles =
-            LLL.transform.GetChild(0).GetChild(0).transform.localEulerAngles;
-        rrr.transform.localPosition = RRR.transform.localPosition;
-        rrr.transform.localEulerAngles = RRR.transform.localEulerAngles;
-        rrr.transform.GetChild(0).transform.localPosition = RRR.transform.GetChild(0).transform.localPosition;
-        rrr.transform.GetChild(0).transform.localEulerAngles = RRR.transform.GetChild(0).transform.localEulerAngles;
-        rrr.transform.GetChild(0).GetChild(0).transform.localPosition =
-            RRR.transform.GetChild(0).GetChild(0).transform.localPosition;
-        rrr.transform.GetChild(0).GetChild(0).transform.localEulerAngles =
-            RRR.transform.GetChild(0).GetChild(0).transform.localEulerAngles;
-    }
+
+    // public void RefBotPositions()
+    // {
+    //     GetComponent<Animator>().enabled = false;
+    //     if (GameManager.Instance)
+    //     {
+    //         LLL = GameManager.Instance.LLL;
+    //         RRR = GameManager.Instance.RRR;
+    //     }
+    //
+    //     leftArm.name = LLL.transform.GetChild(0).name;
+    //     RightArm.name = RRR.transform.GetChild(0).name;
+    //     GameObject lll = leftArm.transform.parent.gameObject;
+    //     GameObject rrr = RightArm.transform.parent.gameObject;
+    //     lll.transform.localPosition = LLL.transform.localPosition;
+    //     lll.transform.localEulerAngles = LLL.transform.localEulerAngles;
+    //     lll.transform.GetChild(0).transform.localPosition = LLL.transform.GetChild(0).transform.localPosition;
+    //     lll.transform.GetChild(0).transform.localEulerAngles = LLL.transform.GetChild(0).transform.localEulerAngles;
+    //     lll.transform.GetChild(0).GetChild(0).transform.localPosition =
+    //         LLL.transform.GetChild(0).GetChild(0).transform.localPosition;
+    //     lll.transform.GetChild(0).GetChild(0).transform.localEulerAngles =
+    //         LLL.transform.GetChild(0).GetChild(0).transform.localEulerAngles;
+    //     rrr.transform.localPosition = RRR.transform.localPosition;
+    //     rrr.transform.localEulerAngles = RRR.transform.localEulerAngles;
+    //     rrr.transform.GetChild(0).transform.localPosition = RRR.transform.GetChild(0).transform.localPosition;
+    //     rrr.transform.GetChild(0).transform.localEulerAngles = RRR.transform.GetChild(0).transform.localEulerAngles;
+    //     rrr.transform.GetChild(0).GetChild(0).transform.localPosition =
+    //         RRR.transform.GetChild(0).GetChild(0).transform.localPosition;
+    //     rrr.transform.GetChild(0).GetChild(0).transform.localEulerAngles =
+    //         RRR.transform.GetChild(0).GetChild(0).transform.localEulerAngles;
+    // }
 }

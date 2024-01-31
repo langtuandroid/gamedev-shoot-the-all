@@ -61,7 +61,7 @@ public class UiManager : MonoBehaviour
 
     IEnumerator loss()
     {
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(1.75f);
         gamePanel.SetActive(false);
         levelFailPanel.SetActive(true);
         desiontaken = true;
@@ -73,12 +73,12 @@ public class UiManager : MonoBehaviour
 
     IEnumerator win()
     {
-        yield return new WaitForSeconds(0.5f);
-        if (AdManager.instance)
-        {
-            AdManager.instance.showInterstitial();
-        }
-        yield return new WaitForSeconds(1.25f);
+        yield return new WaitForSeconds(1.75f);
+        // if (AdManager.instance)
+        // {
+        //     AdManager.instance.showInterstitial();
+        // }
+        // yield return new WaitForSeconds(1.25f);
         gamePanel.SetActive(false);
         levelCompletedPanel.SetActive(true);
         desiontaken = true;
