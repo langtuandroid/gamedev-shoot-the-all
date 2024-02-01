@@ -500,8 +500,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.099999994
-  m_Center: {x: -0.022874687, y: 0.089982904, z: -0.019489137}
+  m_Radius: 0.122741684
+  m_Center: {x: -0.022874694, y: 0.010893106, z: 0.009999355}
 --- !u!1 &2581674393962149275 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8273956300578523486, guid: 426b2d3a0826e41489cc64bb7405b62c, type: 3}
@@ -544,11 +544,11 @@ CharacterJoint:
   m_ConnectedBody: {fileID: 7245013665699862458}
   m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
-  m_Axis: {x: -0.19649337, y: 0.09671869, z: 0.047684968}
+  m_Axis: {x: -0.87666136, y: 0.43151304, z: 0.21274778}
   m_AutoConfigureConnectedAnchor: 1
   m_ConnectedAnchor: {x: -0.1979846, y: 0.23437749, z: 0.020266324}
   serializedVersion: 2
-  m_SwingAxis: {x: -0.09554461, y: -0.5895474, z: 0.8020631}
+  m_SwingAxis: {x: -0.09554468, y: -0.58954763, z: 0.8020631}
   m_TwistLimitSpring:
     spring: 0
     damper: 0
@@ -771,7 +771,7 @@ Rigidbody:
   m_Mass: 12
   m_Drag: 0.3
   m_AngularDrag: 0.3
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_CenterOfMass: {x: 0.021678707, y: 0.0063327393, z: 0.015189052}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
@@ -780,7 +780,7 @@ Rigidbody:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_ImplicitCom: 1
+  m_ImplicitCom: 0
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -853,7 +853,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.077951126, y: 0.4191898, z: 0.3574962}
-  m_Center: {x: 0.018065546, y: 0.12926276, z: -0.049387895}
+  m_Center: {x: 0.01806548, y: 0.0922747, z: -0.04731363}
 --- !u!1 &4870158681614787800 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -7883749328917080035, guid: 426b2d3a0826e41489cc64bb7405b62c, type: 3}
@@ -1597,11 +1597,11 @@ CharacterJoint:
   m_ConnectedBody: {fileID: 7245013665699862458}
   m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: 0, z: 0}
-  m_Axis: {x: 0.108161464, y: 0.053250767, z: -0.18938495}
+  m_Axis: {x: 0.49808878, y: 0.27148044, z: -0.82353276}
   m_AutoConfigureConnectedAnchor: 1
   m_ConnectedAnchor: {x: 0.19376536, y: 0.24384554, z: -0.010216773}
   serializedVersion: 2
-  m_SwingAxis: {x: 0.87367576, y: -0.20432852, z: 0.44152075}
+  m_SwingAxis: {x: 0.8629815, y: -0.24794236, z: 0.44021314}
   m_TwistLimitSpring:
     spring: 0
     damper: 0
