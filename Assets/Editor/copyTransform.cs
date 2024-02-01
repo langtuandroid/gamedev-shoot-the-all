@@ -6,7 +6,6 @@ public class CopyTransform : MonoBehaviour
     public static void SetPose()
     {
         TransformData transformDataOfObj01; //TransformData is a class that store and transfer the transform from
-        TransformData transformDataOfObj02; // one object to another
        
         Transform obj01 = Selection.activeTransform; // get the clicked object
         Transform obj02 = Instantiate(obj01, obj01.position, obj01.rotation); //duplicate it
