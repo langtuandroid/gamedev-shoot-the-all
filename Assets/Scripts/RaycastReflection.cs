@@ -1,18 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
 public class RaycastReflection : MonoBehaviour
 {
 	public int reflections;
-	public float maxLength;
+	private const float maxLength = 30f;
 
 	private LineRenderer lineRenderer;
 	private Ray ray;
 	private RaycastHit hit;
 	private Vector3 direction;
-	public GameObject thisarm;
 
 	private void Awake()
 	{
@@ -34,8 +31,7 @@ public class RaycastReflection : MonoBehaviour
 				lineRenderer.SetPosition(lineRenderer.positionCount - 1, hit.point);
 				remainingLength -= Vector3.Distance(ray.origin, hit.point);
 				ray = new Ray(hit.point, Vector3.Reflect(ray.direction, hit.normal));
-				if (hit.collider.tag != "Mirror")
-					break;
+				if (!hit.collider.CompareTag("Mirror")) break;
 			}
 			else
 			{

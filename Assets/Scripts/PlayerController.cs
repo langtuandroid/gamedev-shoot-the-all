@@ -158,7 +158,7 @@ public class PlayerController : MonoBehaviour
 
         for (int i = 0; i < incolliders.Length; i++)
         {
-            //incolliders[i].enabled = false;
+            incolliders[i].enabled = false;
         }
 
         for (int i = 0; i < rigidbodies.Length; i++)
@@ -166,6 +166,7 @@ public class PlayerController : MonoBehaviour
             rigidbodies[i].isKinematic = true;
         }
 
+        transform.GetComponent<CapsuleCollider>().enabled = true;
         // CapsuleCollider cc = GetComponent<CapsuleCollider>();
         // cc.enabled = true;
         // cc.height = 1.85f;
@@ -174,14 +175,14 @@ public class PlayerController : MonoBehaviour
 
     public void KillThisBot()
     {
-        for (int i = 0; i < incolliders.Length; i++)
+        foreach (var c in incolliders)
         {
-            incolliders[i].enabled = true;
+            c.enabled = true;
         }
 
-        for (int i = 0; i < rigidbodies.Length; i++)
+        foreach (var rb in rigidbodies)
         {
-            rigidbodies[i].isKinematic = false;
+            rb.isKinematic = false;
         }
 
         transform.GetComponent<CapsuleCollider>().enabled = false;
@@ -201,7 +202,7 @@ public class PlayerController : MonoBehaviour
         {
             AudioManager.instance.Play("Hit");
         }
-        Destroy(gameObject);
+        // Destroy(gameObject);
     }
 
     public void Shoot()

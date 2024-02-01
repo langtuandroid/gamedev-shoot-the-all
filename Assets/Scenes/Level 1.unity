@@ -1134,7 +1134,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5893010973780331485, guid: c44e293f924a04245abf3d319f8f7843, type: 3}
       propertyPath: m_Name
-      value: EnemyBodyguard (1)
+      value: EnemyBodyguard
       objectReference: {fileID: 0}
     - target: {fileID: 6672236242332570238, guid: c44e293f924a04245abf3d319f8f7843, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1190,10 +1190,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1723261753192455868, guid: fd8951b1302c2a64b89b152fa2a5bc58, type: 3}
-      propertyPath: m_RootOrder
-      value: 13
-      objectReference: {fileID: 0}
-    - target: {fileID: 1723261753192455868, guid: fd8951b1302c2a64b89b152fa2a5bc58, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.629
       objectReference: {fileID: 0}
@@ -1236,10 +1232,6 @@ PrefabInstance:
     - target: {fileID: 5687213459757865733, guid: fd8951b1302c2a64b89b152fa2a5bc58, type: 3}
       propertyPath: m_Name
       value: PlayerSamurai
-      objectReference: {fileID: 0}
-    - target: {fileID: 5687213459757865733, guid: fd8951b1302c2a64b89b152fa2a5bc58, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
