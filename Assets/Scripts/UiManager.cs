@@ -49,10 +49,10 @@ public class UiManager : MonoBehaviour
     }
     public void LevelFail()
     {
-        if (AdManager.instance)
-        {
-            AdManager.instance.showInterstitial();
-        }
+        // if (AdManager.instance)
+        // {
+        //     AdManager.instance.showInterstitial();
+        // }
         if (!desiontaken)
         {
             StartCoroutine(loss());
@@ -61,7 +61,7 @@ public class UiManager : MonoBehaviour
 
     IEnumerator loss()
     {
-        yield return new WaitForSeconds(1.75f);
+        yield return new WaitForSeconds(1f);
         gamePanel.SetActive(false);
         levelFailPanel.SetActive(true);
         desiontaken = true;
@@ -73,7 +73,7 @@ public class UiManager : MonoBehaviour
 
     IEnumerator win()
     {
-        yield return new WaitForSeconds(1.75f);
+        yield return new WaitForSeconds(1f);
         // if (AdManager.instance)
         // {
         //     AdManager.instance.showInterstitial();

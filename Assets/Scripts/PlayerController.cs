@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
     private Collider[] incolliders;
     private Rigidbody[] rigidbodies;
     private BoxCollider[] boxColliders;
-    float workingArmRotation = 0f;
+    public float workingArmRotation = 0f;
 
     void Start()
     {
@@ -34,6 +34,11 @@ public class PlayerController : MonoBehaviour
         {
             // RefBotPositions();
             GetComponent<Animator>().enabled = true;
+        }
+        else
+        {
+            xxx += workingArmRotation;
+            workingarm.transform.localRotation = isXArmRotation ? Quaternion.Euler(xxx, y, x) : Quaternion.Euler(x, y, xxx);
         }
     }
 
@@ -67,7 +72,6 @@ public class PlayerController : MonoBehaviour
                 }
             }
             
-            Debug.Log("new rotation: " + tempWorkingArmRotation);
             float yRotation;
 
             if (tempWorkingArmRotation is >= 0 and < 180)
@@ -143,7 +147,7 @@ public class PlayerController : MonoBehaviour
 
     public void RemoveRigAndCol()
     {
-        GetComponent<Animator>().enabled = false;
+        //GetComponent<Animator>().enabled = false;
         incolliders = GetComponentsInChildren<Collider>();
         rigidbodies = GetComponentsInChildren<Rigidbody>();
         boxColliders = GetComponentsInChildren<BoxCollider>();
@@ -154,7 +158,7 @@ public class PlayerController : MonoBehaviour
 
         for (int i = 0; i < incolliders.Length; i++)
         {
-            incolliders[i].enabled = false;
+            //incolliders[i].enabled = false;
         }
 
         for (int i = 0; i < rigidbodies.Length; i++)
@@ -162,10 +166,10 @@ public class PlayerController : MonoBehaviour
             rigidbodies[i].isKinematic = true;
         }
 
-        CapsuleCollider cc = GetComponent<CapsuleCollider>();
-        cc.enabled = true;
-        cc.height = 1.85f;
-        cc.center = new Vector3(0, 0.85f, 0);
+        // CapsuleCollider cc = GetComponent<CapsuleCollider>();
+        // cc.enabled = true;
+        // cc.height = 1.85f;
+        // cc.center = new Vector3(0, 0.85f, 0);
     }
 
     public void KillThisBot()
@@ -181,7 +185,7 @@ public class PlayerController : MonoBehaviour
         }
 
         transform.GetComponent<CapsuleCollider>().enabled = false;
-        GetComponent<Animator>().enabled = false;
+        // GetComponent<Animator>().enabled = false;
         if (gameObject.tag == "Emeny")
         {
             tag = "Untagged";
@@ -193,11 +197,11 @@ public class PlayerController : MonoBehaviour
         }
 
         Gun.gameObject.SetActive(false);
-        Destroy(GetComponent<PlayerController>());
         if (AudioManager.instance)
         {
             AudioManager.instance.Play("Hit");
         }
+        Destroy(gameObject);
     }
 
     public void Shoot()
@@ -228,7 +232,7 @@ public class PlayerController : MonoBehaviour
     public void DanceForWin()
     {
         // RefBotPositions();
-        GetComponent<Animator>().enabled = true;
+        // GetComponent<Animator>().enabled = true;
         Gun.GetComponent<RaycastReflection>().enabled = false;
         Gun.GetComponent<LineRenderer>().enabled = false;
         Gun.gameObject.SetActive(false);
