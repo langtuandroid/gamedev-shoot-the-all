@@ -53,9 +53,7 @@ public class PlayerController : MonoBehaviour
             RightShoulder.transform.LookAt(Gun);
             Head.transform.LookAt(Gun);
             Gun.transform.localRotation = Quaternion.Euler(0, 0, -xxx);
-            //Debug.Log("new rotation: " + workingarm.transform.localEulerAngles);// Math.Abs(Gun.transform.localEulerAngles.z) * 0.9f);
-            PlayerModel.transform.localEulerAngles =
-                new Vector3(0f, Math.Abs(Gun.transform.localRotation.eulerAngles.z) * 0.9f, 0f);
+            PlayerModel.transform.localEulerAngles = new Vector3(0f, Math.Abs(Gun.transform.localRotation.eulerAngles.z) * 0.9f, 0f);
 
 
             var tempWorkingArmRotation = Math.Abs(workingArmRotation);
@@ -114,6 +112,7 @@ public class PlayerController : MonoBehaviour
                 if (i < ListOfPoints.Count - 1)
                 {
                     i++;
+                    bullet.transform.LookAt(ListOfPoints[i]);
                 }
                 else
                 {
@@ -123,8 +122,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-
-        if (shoot && bullet == null)
+        else if (shoot && bullet == null)
         {
             active = true;
         }
@@ -175,6 +173,7 @@ public class PlayerController : MonoBehaviour
 
     public void KillThisBot()
     {
+        shoot = false;
         foreach (var c in incolliders)
         {
             c.enabled = true;
@@ -218,6 +217,7 @@ public class PlayerController : MonoBehaviour
         Gun.GetComponent<LineRenderer>().GetPositions(temparray);
         ListOfPoints = temparray.ToList();
         bullet = Instantiate(GameManager.Instance.Bullet, ListOfPoints[0], Quaternion.identity);
+        bullet.transform.LookAt(ListOfPoints[1]);
         shoot = true;
         if (SuperBullet)
         {
@@ -237,6 +237,7 @@ public class PlayerController : MonoBehaviour
         Gun.GetComponent<RaycastReflection>().enabled = false;
         Gun.GetComponent<LineRenderer>().enabled = false;
         Gun.gameObject.SetActive(false);
+        if (bullet != null) Destroy(bullet);
         active = false;
 
     }
