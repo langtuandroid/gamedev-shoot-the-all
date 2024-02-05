@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
         i = 0;
         active = false;
         RemoveRigAndCol();
-        XandYofPresent(workingarm);
+        XAndYOfPresent(workingarm);
         if (workingarm == null)
         {
             // RefBotPositions();
@@ -205,7 +205,10 @@ public class PlayerController : MonoBehaviour
         Gun.GetComponent<LineRenderer>().GetPositions(temparray);
         ListOfPoints = temparray.ToList();
         bullet = Instantiate(GameManager.Instance.Bullet, ListOfPoints[0], Quaternion.identity);
-        bullet.transform.LookAt(ListOfPoints[1]);
+        if (ListOfPoints.Count > 1)
+        {
+            bullet.transform.LookAt(ListOfPoints[1]);
+        }
         shoot = true;
         if (SuperBullet)
         {
@@ -230,17 +233,15 @@ public class PlayerController : MonoBehaviour
     
     public void DanceForWin()
     {
-        // RefBotPositions();
-        // GetComponent<Animator>().enabled = true;
         Gun.GetComponent<RaycastReflection>().enabled = false;
         Gun.GetComponent<LineRenderer>().enabled = false;
-        Gun.gameObject.SetActive(false);
+        // Gun.gameObject.SetActive(false);
         if (bullet != null) Destroy(bullet);
         active = false;
 
     }
 
-    public void XandYofPresent(GameObject workingarm)
+    private void XAndYOfPresent(GameObject workingarm)
     {
         if (isXArmRotation)
         {
@@ -257,35 +258,4 @@ public class PlayerController : MonoBehaviour
 
         active = true;
     }
-
-    // public void RefBotPositions()
-    // {
-    //     GetComponent<Animator>().enabled = false;
-    //     if (GameManager.Instance)
-    //     {
-    //         LLL = GameManager.Instance.LLL;
-    //         RRR = GameManager.Instance.RRR;
-    //     }
-    //
-    //     leftArm.name = LLL.transform.GetChild(0).name;
-    //     RightArm.name = RRR.transform.GetChild(0).name;
-    //     GameObject lll = leftArm.transform.parent.gameObject;
-    //     GameObject rrr = RightArm.transform.parent.gameObject;
-    //     lll.transform.localPosition = LLL.transform.localPosition;
-    //     lll.transform.localEulerAngles = LLL.transform.localEulerAngles;
-    //     lll.transform.GetChild(0).transform.localPosition = LLL.transform.GetChild(0).transform.localPosition;
-    //     lll.transform.GetChild(0).transform.localEulerAngles = LLL.transform.GetChild(0).transform.localEulerAngles;
-    //     lll.transform.GetChild(0).GetChild(0).transform.localPosition =
-    //         LLL.transform.GetChild(0).GetChild(0).transform.localPosition;
-    //     lll.transform.GetChild(0).GetChild(0).transform.localEulerAngles =
-    //         LLL.transform.GetChild(0).GetChild(0).transform.localEulerAngles;
-    //     rrr.transform.localPosition = RRR.transform.localPosition;
-    //     rrr.transform.localEulerAngles = RRR.transform.localEulerAngles;
-    //     rrr.transform.GetChild(0).transform.localPosition = RRR.transform.GetChild(0).transform.localPosition;
-    //     rrr.transform.GetChild(0).transform.localEulerAngles = RRR.transform.GetChild(0).transform.localEulerAngles;
-    //     rrr.transform.GetChild(0).GetChild(0).transform.localPosition =
-    //         RRR.transform.GetChild(0).GetChild(0).transform.localPosition;
-    //     rrr.transform.GetChild(0).GetChild(0).transform.localEulerAngles =
-    //         RRR.transform.GetChild(0).GetChild(0).transform.localEulerAngles;
-    // }
 }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.09389458, g: 0.11918206, b: 0.15504968, a: 1}
+  m_IndirectSpecularColor: {r: 0.09398355, g: 0.11925351, b: 0.15505567, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -205,7 +205,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1041338501929815461, guid: 34d719c98f4cd8241b79e89de41fc55c, type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1041338501929815461, guid: 34d719c98f4cd8241b79e89de41fc55c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -317,6 +317,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1723261753192455868, guid: fd8951b1302c2a64b89b152fa2a5bc58, type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 1723261753192455868, guid: fd8951b1302c2a64b89b152fa2a5bc58, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.0792631
@@ -707,6 +711,10 @@ PrefabInstance:
       value: Mirror
       objectReference: {fileID: 0}
     - target: {fileID: 8482228509976340226, guid: 3728960310ae74f449c8af6dd63350dd, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8482228509976340226, guid: 3728960310ae74f449c8af6dd63350dd, type: 3}
       propertyPath: m_LocalPosition.x
       value: 32.9
       objectReference: {fileID: 0}
@@ -878,7 +886,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 814873765757729105, guid: 64c5f960261be1d4fa172ecb151481f0, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 814873765757729105, guid: 64c5f960261be1d4fa172ecb151481f0, type: 3}
       propertyPath: m_AnchorMax.x
@@ -956,22 +964,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
-    - target: {fileID: 814873766276624314, guid: 64c5f960261be1d4fa172ecb151481f0, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -150
-      objectReference: {fileID: 0}
-    - target: {fileID: 814873766276624315, guid: 64c5f960261be1d4fa172ecb151481f0, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-    - target: {fileID: 814873766276624315, guid: 64c5f960261be1d4fa172ecb151481f0, type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-    - target: {fileID: 814873766276624315, guid: 64c5f960261be1d4fa172ecb151481f0, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -981,11 +973,11 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 963194228}
-  - {fileID: 2069279338}
-  - {fileID: 57396759}
-  - {fileID: 814873766159685610}
-  - {fileID: 495103540}
   - {fileID: 2060607840}
-  - {fileID: 856770844}
+  - {fileID: 814873766159685610}
+  - {fileID: 2069279338}
   - {fileID: 727771856}
+  - {fileID: 57396759}
+  - {fileID: 495103540}
+  - {fileID: 963194228}
+  - {fileID: 856770844}

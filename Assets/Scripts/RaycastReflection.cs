@@ -10,10 +10,12 @@ public class RaycastReflection : MonoBehaviour
 	private Ray ray;
 	private RaycastHit hit;
 	private Vector3 direction;
+	private Collider[] colliders;
 
 	private void Awake()
 	{
 		lineRenderer = GetComponent<LineRenderer>();
+		colliders = new Collider[50];
 	}
 
 	private void Update()
@@ -23,6 +25,11 @@ public class RaycastReflection : MonoBehaviour
 		lineRenderer.SetPosition(0, transform.position);
 		float remainingLength = maxLength;
 
+		var count = Physics.OverlapSphereNonAlloc(ray.origin, 0.1f, colliders);
+		for (int i = 0; i < count; i++)
+		{
+			if (colliders[i].tag.Equals("Player")) return;
+		}
 		for (int i = 0; i < reflections; i++)
 		{
 			if (Physics.Raycast(ray.origin, ray.direction, out hit, remainingLength))

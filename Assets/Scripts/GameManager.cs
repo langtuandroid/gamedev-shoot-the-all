@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
         NumberOfBotsToKill--;
         if (NumberOfBotsToKill == 0)
         {
-            UiManager.Instance.levelCompleted();
+            UiManager.Instance.LevelCompleted();
             PlayerController[] pc = GameObject.FindObjectsOfType<PlayerController>();
             for (int i = 0; i < pc.Length; i++)
             {

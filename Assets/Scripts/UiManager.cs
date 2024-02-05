@@ -12,6 +12,9 @@ public class UiManager : MonoBehaviour
     public TextMeshProUGUI LevelNumber;
     public static UiManager Instance;
     public bool desiontaken;
+    
+    
+    
     private void Awake()
     {
         if(!Instance)
@@ -24,21 +27,20 @@ public class UiManager : MonoBehaviour
         levelCompletedPanel.SetActive(false);
         levelFailPanel.SetActive(false);
         gamePanel.SetActive(true);
-        displayLevelNumber();
+        DisplayLevelNumber();
     }
-    void Update()
-    {
-
-    }
-    public void displayLevelNumber()
+    
+    public void DisplayLevelNumber()
     {
         //LevelNumber = GetComponent<TextMeshProUGUI>();
-        LevelNumber.text = "Level " + PlayerPrefs.GetInt("level", 1).ToString();
+        LevelNumber.text = "Level " + PlayerPrefs.GetInt("level", 1);
     }
-    public void levelCompleted()
+    
+    public void LevelCompleted()
     {
         if (!desiontaken)
         {
+            desiontaken = true;
             if (Particaleffect.instance)
             {
                 Particaleffect.instance.playpop();
@@ -49,12 +51,9 @@ public class UiManager : MonoBehaviour
     }
     public void LevelFail()
     {
-        // if (AdManager.instance)
-        // {
-        //     AdManager.instance.showInterstitial();
-        // }
         if (!desiontaken)
         {
+            desiontaken = true;
             StartCoroutine(loss());
         }
     }
@@ -64,7 +63,7 @@ public class UiManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         gamePanel.SetActive(false);
         levelFailPanel.SetActive(true);
-        desiontaken = true;
+        levelCompletedPanel.SetActive(false);
         if (AudioManager.instance)
         {
             AudioManager.instance.Play("loss");
@@ -74,20 +73,12 @@ public class UiManager : MonoBehaviour
     IEnumerator win()
     {
         yield return new WaitForSeconds(1f);
-        // if (AdManager.instance)
-        // {
-        //     AdManager.instance.showInterstitial();
-        // }
-        // yield return new WaitForSeconds(1.25f);
-        gamePanel.SetActive(false);
-        levelCompletedPanel.SetActive(true);
-        desiontaken = true;
-        if (AudioManager.instance)
+        if (!desiontaken)
         {
-            AudioManager.instance.Play("WIn");
+            gamePanel.SetActive(false);
+            levelCompletedPanel.SetActive(true);
+            if (AudioManager.instance) AudioManager.instance.Play("WIn");
         }
-
-        
     }
 
     public void NextLevel()

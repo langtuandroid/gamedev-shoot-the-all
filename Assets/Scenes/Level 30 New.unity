@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.04110337, g: 0.07296371, b: 0.12544, a: 1}
+  m_IndirectSpecularColor: {r: 0.04122688, g: 0.07304052, b: 0.12552518, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -202,10 +202,6 @@ PrefabInstance:
     - target: {fileID: 5893010973780331485, guid: c44e293f924a04245abf3d319f8f7843, type: 3}
       propertyPath: m_Name
       value: EnemyBodyguard
-      objectReference: {fileID: 0}
-    - target: {fileID: 6672236242332570238, guid: c44e293f924a04245abf3d319f8f7843, type: 3}
-      propertyPath: m_RootOrder
-      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 6672236242332570238, guid: c44e293f924a04245abf3d319f8f7843, type: 3}
       propertyPath: m_LocalPosition.x
@@ -585,7 +581,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7654027826029672470, guid: 0de4800ea595e2e4585440d81b6bdc3d, type: 3}
       propertyPath: m_RootOrder
-      value: 15
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 7654027826029672470, guid: 0de4800ea595e2e4585440d81b6bdc3d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -998,10 +994,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1723261753192455868, guid: fd8951b1302c2a64b89b152fa2a5bc58, type: 3}
-      propertyPath: m_RootOrder
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 1723261753192455868, guid: fd8951b1302c2a64b89b152fa2a5bc58, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.15
       objectReference: {fileID: 0}
@@ -1040,10 +1032,6 @@ PrefabInstance:
     - target: {fileID: 1723261753192455868, guid: fd8951b1302c2a64b89b152fa2a5bc58, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2360081531580614874, guid: fd8951b1302c2a64b89b152fa2a5bc58, type: 3}
-      propertyPath: workingArmRotation
-      value: 270
       objectReference: {fileID: 0}
     - target: {fileID: 5687213459757865733, guid: fd8951b1302c2a64b89b152fa2a5bc58, type: 3}
       propertyPath: m_Name
@@ -2414,10 +2402,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 814873764307396060, guid: 64c5f960261be1d4fa172ecb151481f0, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 814873765757729105, guid: 64c5f960261be1d4fa172ecb151481f0, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -2506,10 +2490,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
-    - target: {fileID: 814873766276624314, guid: 64c5f960261be1d4fa172ecb151481f0, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -150
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2590,19 +2570,19 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1087653073}
-  - {fileID: 963194228}
   - {fileID: 2081135909}
   - {fileID: 1213929448}
   - {fileID: 57396759}
   - {fileID: 1560487358}
   - {fileID: 458410743}
   - {fileID: 1976811319}
+  - {fileID: 963194228}
+  - {fileID: 743504935}
+  - {fileID: 341828917}
+  - {fileID: 64832425}
   - {fileID: 81225574}
   - {fileID: 75003068}
   - {fileID: 448583165}
   - {fileID: 169958125}
   - {fileID: 739703708}
   - {fileID: 1624743371}
-  - {fileID: 743504935}
-  - {fileID: 341828917}
-  - {fileID: 64832425}
