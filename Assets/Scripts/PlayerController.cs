@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
+    public ParticleSystem shootParticle;
     public GameObject LeftShoulder, RightShoulder, Head;
     public Transform Gun;
     public Transform PlayerModel;
@@ -23,6 +25,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody[] rigidbodies;
     private BoxCollider[] boxColliders;
     public float workingArmRotation = 0f;
+    public float gunAnimationOffset;
+    public Vector3 gunAnimationRotation;
 
     void Start()
     {
@@ -107,12 +111,13 @@ public class PlayerController : MonoBehaviour
             active = false;
             bullet.transform.position =
                 Vector3.MoveTowards(bullet.transform.position, ListOfPoints[i], 10 * Time.deltaTime);
+            
+            bullet.transform.LookAt(ListOfPoints[i]);
             if (bullet.transform.position == ListOfPoints[i])
             {
                 if (i < ListOfPoints.Count - 1)
                 {
                     i++;
-                    bullet.transform.LookAt(ListOfPoints[i]);
                 }
                 else
                 {
@@ -143,32 +148,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void RemoveRigAndCol()
+    private void RemoveRigAndCol()
     {
-        //GetComponent<Animator>().enabled = false;
         incolliders = GetComponentsInChildren<Collider>();
         rigidbodies = GetComponentsInChildren<Rigidbody>();
         boxColliders = GetComponentsInChildren<BoxCollider>();
-        for (int i = 0; i < boxColliders.Length; i++)
-        {
-            boxColliders[i].transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ;
-        }
+        
+        foreach (var bc in boxColliders)
+            bc.transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ;
 
-        for (int i = 0; i < incolliders.Length; i++)
-        {
-            incolliders[i].enabled = false;
-        }
-
-        for (int i = 0; i < rigidbodies.Length; i++)
-        {
-            rigidbodies[i].isKinematic = true;
-        }
+        foreach (var cl in incolliders) cl.enabled = false;
+        foreach (var rb in rigidbodies) rb.isKinematic = true;
 
         transform.GetComponent<CapsuleCollider>().enabled = true;
-        // CapsuleCollider cc = GetComponent<CapsuleCollider>();
-        // cc.enabled = true;
-        // cc.height = 1.85f;
-        // cc.center = new Vector3(0, 0.85f, 0);
     }
 
     public void KillThisBot()
@@ -186,22 +178,15 @@ public class PlayerController : MonoBehaviour
 
         transform.GetComponent<CapsuleCollider>().enabled = false;
         // GetComponent<Animator>().enabled = false;
-        if (gameObject.tag == "Emeny")
+        if (gameObject.CompareTag("Emeny"))
         {
             tag = "Untagged";
             GameManager.Instance.killcount();
         }
-        else if (gameObject.tag == "Player")
-        {
-            UiManager.Instance.LevelFail();
-        }
+        else if (gameObject.CompareTag("Player")) UiManager.Instance.LevelFail();
 
         Gun.gameObject.SetActive(false);
-        if (AudioManager.instance)
-        {
-            AudioManager.instance.Play("Hit");
-        }
-        // Destroy(gameObject);
+        if (AudioManager.instance) AudioManager.instance.Play("Hit");
     }
 
     public void Shoot()
@@ -211,6 +196,9 @@ public class PlayerController : MonoBehaviour
 
     private void SendBullet()
     {
+        GunAnimation();
+        shootParticle.Stop();
+        shootParticle.Play();
         i = 0;
         ListOfPoints.Clear();
         Vector3[] temparray = new Vector3[Gun.GetComponent<LineRenderer>().positionCount];
@@ -230,6 +218,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void GunAnimation()
+    {
+        Gun.DOBlendableLocalMoveBy(Gun.right * -gunAnimationOffset, 0.1f);
+        Gun.DOBlendableRotateBy(gunAnimationRotation, 0.1f).OnComplete(() =>
+        {
+            Gun.DOBlendableLocalMoveBy(Gun.right * gunAnimationOffset, 0.2f);
+            Gun.DOBlendableRotateBy(-gunAnimationRotation, 0.2f);
+        });
+    }
+    
     public void DanceForWin()
     {
         // RefBotPositions();
