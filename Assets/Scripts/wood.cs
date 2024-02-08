@@ -16,6 +16,13 @@ public class wood : MonoBehaviour
                 transform.GetChild(i).transform.gameObject.GetComponent<Rigidbody>().
                     AddForce(thisdirection * 5000 * Time.deltaTime);
             }
+
+            foreach (var bc in GetComponents<BoxCollider>())
+            {
+                bc.enabled = false;
+            }
+
+            enabled = false;
         }
     }
 }

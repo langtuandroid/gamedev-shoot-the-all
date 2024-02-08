@@ -12,6 +12,8 @@ public class RaycastReflection : MonoBehaviour
 	private Vector3 direction;
 	private Collider[] colliders;
 
+	public bool isKillableOnShot = false;
+
 	private void Awake()
 	{
 		lineRenderer = GetComponent<LineRenderer>();
@@ -25,11 +27,18 @@ public class RaycastReflection : MonoBehaviour
 		lineRenderer.SetPosition(0, transform.position);
 		float remainingLength = maxLength;
 
-		var count = Physics.OverlapSphereNonAlloc(ray.origin, 0.1f, colliders);
+		var count = Physics.OverlapSphereNonAlloc(ray.origin, 0.11f, colliders);
 		for (int i = 0; i < count; i++)
 		{
-			if (colliders[i].tag.Equals("Player")) return;
+			if (colliders[i].tag.Equals("Player") || colliders[i].tag.Equals("Emeny"))
+			{
+				lineRenderer.positionCount += 1;
+				lineRenderer.SetPosition(lineRenderer.positionCount - 1, ray.origin + ray.direction * 0.3f);
+				isKillableOnShot = true;
+				return;
+			}
 		}
+		isKillableOnShot = false;
 		for (int i = 0; i < reflections; i++)
 		{
 			if (Physics.Raycast(ray.origin, ray.direction, out hit, remainingLength))
@@ -37,8 +46,16 @@ public class RaycastReflection : MonoBehaviour
 				lineRenderer.positionCount += 1;
 				lineRenderer.SetPosition(lineRenderer.positionCount - 1, hit.point);
 				remainingLength -= Vector3.Distance(ray.origin, hit.point);
+				if (!hit.collider.CompareTag("Mirror"))
+				{
+					// if (hit.collider.CompareTag("Emeny") || hit.collider.CompareTag("Player") || hit.collider.CompareTag("Hit"))
+					// {
+					// 	lineRenderer.positionCount += 1;
+					// 	lineRenderer.SetPosition(lineRenderer.positionCount - 1, hit.point + ray.direction * 0.13f);
+					// }
+					break;
+				}
 				ray = new Ray(hit.point, Vector3.Reflect(ray.direction, hit.normal));
-				if (!hit.collider.CompareTag("Mirror")) break;
 			}
 			else
 			{

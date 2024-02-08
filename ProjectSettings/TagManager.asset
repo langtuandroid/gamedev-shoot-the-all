@@ -10,6 +10,7 @@ TagManager:
   - Emeny
   - SuperBullet
   - Hit
+  - TestBullet
   layers:
   - Default
   - TransparentFX

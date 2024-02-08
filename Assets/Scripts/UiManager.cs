@@ -46,24 +46,26 @@ public class UiManager : MonoBehaviour
                 Particaleffect.instance.playpop();
             }
             
-            StartCoroutine(win());
+            winCoroutine = StartCoroutine(win());
         }
     }
+
+    private Coroutine winCoroutine;
+
     public void LevelFail()
     {
-        if (!desiontaken)
-        {
-            desiontaken = true;
-            StartCoroutine(loss());
-        }
+        desiontaken = true;
+        StartCoroutine(loss());
+
     }
 
     IEnumerator loss()
     {
+        if (winCoroutine != null) StopCoroutine(winCoroutine);
+        levelCompletedPanel.SetActive(false);
         yield return new WaitForSeconds(1f);
         gamePanel.SetActive(false);
         levelFailPanel.SetActive(true);
-        levelCompletedPanel.SetActive(false);
         if (AudioManager.instance)
         {
             AudioManager.instance.Play("loss");
@@ -72,13 +74,10 @@ public class UiManager : MonoBehaviour
 
     IEnumerator win()
     {
-        yield return new WaitForSeconds(1f);
-        if (!desiontaken)
-        {
-            gamePanel.SetActive(false);
-            levelCompletedPanel.SetActive(true);
-            if (AudioManager.instance) AudioManager.instance.Play("WIn");
-        }
+        yield return new WaitForSeconds(1.5f);
+        gamePanel.SetActive(false);
+        levelCompletedPanel.SetActive(true);
+        if (AudioManager.instance) AudioManager.instance.Play("WIn");
     }
 
     public void NextLevel()

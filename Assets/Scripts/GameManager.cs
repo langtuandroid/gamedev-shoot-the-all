@@ -5,11 +5,12 @@ public class GameManager : MonoBehaviour
 {
     private const float DistanceToShoot = 0.003f;
     
-    public GameObject Bullet;
+    public BulletController Bullet;
     public static GameManager Instance;
     public int NumberOfBotsToKill;
     public float timecount;
     public GameObject LLL, RRR;
+    private bool isEndGame = false;
 
     private Vector3 firstMousePoint = Vector3.positiveInfinity;
     
@@ -23,6 +24,7 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
+        if (isEndGame) return;
         if (Input.GetMouseButton(0) && !EventSystem.current.currentSelectedGameObject)
         {
             firstMousePoint = Input.mousePosition;
@@ -44,7 +46,7 @@ public class GameManager : MonoBehaviour
     public void Start()
     {
         NumberOfBotsToKill = 0;
-        PlayerController[] pc = GameObject.FindObjectsOfType<PlayerController>();
+        PlayerController[] pc = FindObjectsOfType<PlayerController>();
         for (int i = 0; i < pc.Length; i++)
         {
             if (pc[i].transform.tag == "Emeny")
@@ -59,16 +61,18 @@ public class GameManager : MonoBehaviour
         NumberOfBotsToKill--;
         if (NumberOfBotsToKill == 0)
         {
-            UiManager.Instance.LevelCompleted();
-            PlayerController[] pc = GameObject.FindObjectsOfType<PlayerController>();
+            isEndGame = true;
+            PlayerController[] pc = FindObjectsOfType<PlayerController>();
             for (int i = 0; i < pc.Length; i++)
             {
                 if (pc[i].transform.tag == "Player")
                 {
                     pc[i].DanceForWin();
+                    pc[i].GetComponent<PlayerController>().active = false;
                     pc[i].GetComponent<PlayerController>().enabled = false;
                 }
             }
+            UiManager.Instance.LevelCompleted();
         }
     }
 
@@ -77,8 +81,20 @@ public class GameManager : MonoBehaviour
         PlayerController[] pc = FindObjectsOfType<PlayerController>();
         for (int i = 0; i < pc.Length; i++)
         {
-            Debug.Log(pc[i].transform.name);
             pc[i].Shoot();
         }
+    }
+
+    public void LevelFail()
+    {
+        isEndGame = true;
+        PlayerController[] pc = FindObjectsOfType<PlayerController>();
+        foreach (var t in pc)
+        {
+            t.DanceForWin();
+            t.GetComponent<PlayerController>().active = false;
+            t.GetComponent<PlayerController>().enabled = false;
+        }
+        UiManager.Instance.LevelFail();
     }
 }

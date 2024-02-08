@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -9,9 +10,11 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem shootParticle;
     public GameObject LeftShoulder, RightShoulder, Head;
     public Transform Gun;
+    public Transform GunModel;
     public Transform PlayerModel;
     public bool SuperBullet;
     public bool active;
+    private bool shootDelayPassed = true;
     public bool shoot;
     public bool isLookAtGun;
     public bool isXArmRotation;
@@ -19,7 +22,7 @@ public class PlayerController : MonoBehaviour
     private float x, y;
     private int i;
     public GameObject workingarm;
-    private GameObject bullet;
+    private BulletController bullet;
     public List<Vector3> ListOfPoints;
     private Collider[] incolliders;
     private Rigidbody[] rigidbodies;
@@ -105,29 +108,8 @@ public class PlayerController : MonoBehaviour
                 workingarm.transform.localRotation = isXArmRotation ? Quaternion.Euler(xxx, y, x) : Quaternion.Euler(x, y, xxx);
             }
         }
-
-        if (shoot && bullet != null)
-        {
-            active = false;
-            bullet.transform.position =
-                Vector3.MoveTowards(bullet.transform.position, ListOfPoints[i], 10 * Time.deltaTime);
-            
-            bullet.transform.LookAt(ListOfPoints[i]);
-            if (bullet.transform.position == ListOfPoints[i])
-            {
-                if (i < ListOfPoints.Count - 1)
-                {
-                    i++;
-                }
-                else
-                {
-                    active = true;
-                    Destroy(bullet, 0.1f);
-                    shoot = false;
-                }
-            }
-        }
-        else if (shoot && bullet == null)
+        
+        if (shoot && bullet == null)
         {
             active = true;
         }
@@ -138,7 +120,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Bullet"))
         {
             KillThisBot();
-            Destroy(bullet);
+            //Destroy(bullet);
             Destroy(collision.gameObject);
         }
 
@@ -166,6 +148,7 @@ public class PlayerController : MonoBehaviour
     public void KillThisBot()
     {
         shoot = false;
+        active = false;
         foreach (var c in incolliders)
         {
             c.enabled = true;
@@ -177,34 +160,54 @@ public class PlayerController : MonoBehaviour
         }
 
         transform.GetComponent<CapsuleCollider>().enabled = false;
-        // GetComponent<Animator>().enabled = false;
         if (gameObject.CompareTag("Emeny"))
         {
             tag = "Untagged";
             GameManager.Instance.killcount();
         }
-        else if (gameObject.CompareTag("Player")) UiManager.Instance.LevelFail();
+        else if (gameObject.CompareTag("Player")) GameManager.Instance.LevelFail();
 
-        Gun.gameObject.SetActive(false);
+        Gun.GetComponent<RaycastReflection>().enabled = false;
+        Gun.GetComponent<LineRenderer>().enabled = false;
+        GunModel.gameObject.SetActive(false);
         if (AudioManager.instance) AudioManager.instance.Play("Hit");
+        enabled = false;
     }
 
     public void Shoot()
     {
-        if (active) SendBullet();
+        if (active && shootDelayPassed)
+        {
+            shootDelayPassed = false;
+            StartCoroutine(ShootDelay());
+            SendBullet();
+        }
+    }
+
+    private IEnumerator ShootDelay()
+    {
+        yield return new WaitForSeconds(2);
+        shootDelayPassed = true;
     }
 
     private void SendBullet()
     {
-        GunAnimation();
         shootParticle.Stop();
         shootParticle.Play();
+        
+        if (Gun.GetComponent<RaycastReflection>().isKillableOnShot)
+        {
+            KillThisBot();
+            Destroy(bullet);
+            return;
+        }
         i = 0;
         ListOfPoints.Clear();
         Vector3[] temparray = new Vector3[Gun.GetComponent<LineRenderer>().positionCount];
         Gun.GetComponent<LineRenderer>().GetPositions(temparray);
         ListOfPoints = temparray.ToList();
         bullet = Instantiate(GameManager.Instance.Bullet, ListOfPoints[0], Quaternion.identity);
+        bullet.SetPath(ListOfPoints);
         if (ListOfPoints.Count > 1)
         {
             bullet.transform.LookAt(ListOfPoints[1]);
@@ -219,6 +222,7 @@ public class PlayerController : MonoBehaviour
         {
             AudioManager.instance.Play("Bullet");
         }
+        GunAnimation();
     }
 
     private void GunAnimation()
@@ -235,8 +239,7 @@ public class PlayerController : MonoBehaviour
     {
         Gun.GetComponent<RaycastReflection>().enabled = false;
         Gun.GetComponent<LineRenderer>().enabled = false;
-        // Gun.gameObject.SetActive(false);
-        if (bullet != null) Destroy(bullet);
+        //if (bullet != null) Destroy(bullet);
         active = false;
 
     }

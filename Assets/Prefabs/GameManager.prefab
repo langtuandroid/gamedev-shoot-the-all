@@ -24,13 +24,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1041338501929815459}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.95, y: -1.7855778, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1041338501929815460
 MonoBehaviour:
@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c477de93e56eb6346ad544fc9662939b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Bullet: {fileID: 4857147254095488774, guid: e4013e64bde136c44b30db55894a1c3c, type: 3}
+  Bullet: {fileID: 5401068321698351674, guid: e4013e64bde136c44b30db55894a1c3c, type: 3}
   NumberOfBotsToKill: 1
   timecount: 0
   LLL: {fileID: 3922078871394570238, guid: a70cf1d794df37447910f93044d85b24, type: 3}
