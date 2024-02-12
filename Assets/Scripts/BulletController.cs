@@ -4,25 +4,25 @@ using UnityEngine;
 public class BulletController : MonoBehaviour
 {
     private List<Vector3> _listOfPoints;
-    private int i = 0;
+    private int _pathPointIndex = 0;
 
     private void Update()
     {
         if (_listOfPoints != null && _listOfPoints.Count > 0)
         {
             transform.position =
-                Vector3.MoveTowards(transform.position, _listOfPoints[i], 10 * Time.deltaTime);
+                Vector3.MoveTowards(transform.position, _listOfPoints[_pathPointIndex], 10 * Time.deltaTime);
 
-            transform.LookAt(_listOfPoints[i]);
-            if (transform.position == _listOfPoints[i])
+            transform.LookAt(_listOfPoints[_pathPointIndex]);
+            if (transform.position == _listOfPoints[_pathPointIndex])
             {
-                if (i < _listOfPoints.Count - 1)
+                if (_pathPointIndex < _listOfPoints.Count - 1)
                 {
-                    i++;
+                    _pathPointIndex++;
                 }
                 else
                 {
-                    Destroy(gameObject, 0.1f);
+                    Destroy(gameObject, 0.15f);
                 }
             }
         }
@@ -31,7 +31,7 @@ public class BulletController : MonoBehaviour
 
     public void SetPath(List<Vector3> listOfPoints)
     {
-        i = 0;
+        _pathPointIndex = 0;
         _listOfPoints = listOfPoints;
     }
 }

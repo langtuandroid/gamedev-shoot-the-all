@@ -1,48 +1,31 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class bomb : MonoBehaviour
 {
-    public List<GameObject> botsTokill;
-    public GameObject blasteffect;
-    // Start is called before the first frame update
+    [SerializeField] private List<GameObject> botsTokill;
+    [SerializeField] private GameObject blasteffect;
+    
     void Start()
     {
         blasteffect.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Bullet")
+        if (collision.gameObject.CompareTag("Bullet"))
         {
             Destroy(collision.gameObject);
             KillThisBot();
         }
-        if (collision.gameObject.tag == "SuperBullet")
-        {
-            KillThisBot();
-        }
-        if(collision.gameObject.tag=="Hit")
-        {
-            KillThisBot();
-        }
+        if (collision.gameObject.CompareTag("SuperBullet") || collision.gameObject.CompareTag("Hit")) KillThisBot();
     }
 
-    public void KillThisBot()
+    private void KillThisBot()
     {
         blasteffect.transform.parent = null;
         blasteffect.SetActive(true);
-      for(int i=0;i<botsTokill.Count;i++)
-        {
-            botsTokill[i].GetComponent<PlayerController>().KillThisBot();
-        }
+        foreach (var bot in botsTokill) bot.GetComponent<PlayerController>().OnBotDeath();
         Destroy(gameObject);
     }
 }

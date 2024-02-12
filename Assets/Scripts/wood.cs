@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class wood : MonoBehaviour
 {
-    public Vector3 thisdirection;
+    [SerializeField] public Vector3 thisdirection;
    
     public void OnTriggerEnter(Collider other)
     {

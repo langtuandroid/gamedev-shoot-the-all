@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Hit : MonoBehaviour
 {
-    public Vector3 thisdirection;
+    [SerializeField] private Vector3 thisdirection;
    
     public void OnCollisionEnter(Collision collision)
     {

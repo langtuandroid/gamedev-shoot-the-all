@@ -5,13 +5,12 @@ public class GameManager : MonoBehaviour
 {
     private const float DistanceToShoot = 0.003f;
     
-    public BulletController Bullet;
+    [SerializeField] private BulletController Bullet;
     public static GameManager Instance;
-    public int NumberOfBotsToKill;
-    public float timecount;
-    public GameObject LLL, RRR;
+    private int _numberOfBotsToKill;
     private bool isEndGame = false;
 
+    private float timeCount;
     private Vector3 firstMousePoint = Vector3.positiveInfinity;
     
     private void Awake()
@@ -28,38 +27,38 @@ public class GameManager : MonoBehaviour
         if (Input.GetMouseButton(0) && !EventSystem.current.currentSelectedGameObject)
         {
             firstMousePoint = Input.mousePosition;
-            timecount += Time.deltaTime;
+            timeCount += Time.deltaTime;
         }
 
         if (Input.GetMouseButtonUp(0) && !EventSystem.current.currentSelectedGameObject)
         {
-            if (timecount < 0.25f && Vector3.Distance(firstMousePoint, Input.mousePosition) < DistanceToShoot)
+            if (timeCount < 0.25f && Vector3.Distance(firstMousePoint, Input.mousePosition) < DistanceToShoot)
             {
                 Shoot();
             }
             
             firstMousePoint = Vector3.positiveInfinity;
-            timecount = 0;
+            timeCount = 0;
         }
     }
 
     public void Start()
     {
-        NumberOfBotsToKill = 0;
+        _numberOfBotsToKill = 0;
         PlayerController[] pc = FindObjectsOfType<PlayerController>();
         for (int i = 0; i < pc.Length; i++)
         {
             if (pc[i].transform.tag == "Emeny")
             {
-                NumberOfBotsToKill++;
+                _numberOfBotsToKill++;
             }
         }
     }
 
-    public void killcount()
+    public void OnBotKilled()
     {
-        NumberOfBotsToKill--;
-        if (NumberOfBotsToKill == 0)
+        _numberOfBotsToKill--;
+        if (_numberOfBotsToKill == 0)
         {
             isEndGame = true;
             PlayerController[] pc = FindObjectsOfType<PlayerController>();
@@ -67,12 +66,12 @@ public class GameManager : MonoBehaviour
             {
                 if (pc[i].transform.tag == "Player")
                 {
-                    pc[i].DanceForWin();
-                    pc[i].GetComponent<PlayerController>().active = false;
+                    pc[i].BotWin();
+                    pc[i].GetComponent<PlayerController>().Disable();
                     pc[i].GetComponent<PlayerController>().enabled = false;
                 }
             }
-            UiManager.Instance.LevelCompleted();
+            UiManager.Instance.OnLevelCompleted();
         }
     }
 
@@ -91,10 +90,12 @@ public class GameManager : MonoBehaviour
         PlayerController[] pc = FindObjectsOfType<PlayerController>();
         foreach (var t in pc)
         {
-            t.DanceForWin();
-            t.GetComponent<PlayerController>().active = false;
+            t.BotWin();
+            t.GetComponent<PlayerController>().Disable();
             t.GetComponent<PlayerController>().enabled = false;
         }
         UiManager.Instance.LevelFail();
     }
+
+    public BulletController GetBullet() => Bullet;
 }

@@ -7,50 +7,46 @@ using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
-    public ParticleSystem shootParticle;
-    public GameObject LeftShoulder, RightShoulder, Head;
-    public Transform Gun;
-    public Transform GunModel;
-    public Transform PlayerModel;
-    public bool SuperBullet;
-    public bool active;
-    private bool shootDelayPassed = true;
-    public bool shoot;
-    public bool isLookAtGun;
-    public bool isXArmRotation;
-    private float xxx;
-    private float x, y;
-    private int i;
-    public GameObject workingarm;
-    private BulletController bullet;
-    public List<Vector3> ListOfPoints;
-    private Collider[] incolliders;
-    private Rigidbody[] rigidbodies;
-    private BoxCollider[] boxColliders;
-    public float workingArmRotation = 0f;
-    public float gunAnimationOffset;
-    public Vector3 gunAnimationRotation;
+    [SerializeField] private ParticleSystem shootParticle;
+    [SerializeField] private GameObject LeftShoulder, RightShoulder, Head;
+    [SerializeField] private Transform Gun;
+    [SerializeField] private Transform GunModel;
+    [SerializeField] private Transform PlayerModel;
+    [SerializeField] private bool SuperBullet;
+    [SerializeField] private bool active;
+    [SerializeField] private bool shoot;
+    [SerializeField] private bool isLookAtGun;
+    [SerializeField] private bool isXArmRotation;
+    [SerializeField] private GameObject workingarm;
+    [SerializeField] private float workingArmRotation = 0f;
+    [SerializeField] private float gunAnimationOffset;
+    [SerializeField] private Vector3 gunAnimationRotation;
+    [SerializeField] private float bodyRotationMin = 20f;
+    [SerializeField] private float bodyRotationMax = 160f;
+    
+    private bool _shootDelayPassed = true;
+    private float x, y, z;
+    private List<Vector3> _listOfPoints = new();
+    private BulletController _currentBullet;
+    private Collider[] _collidersInBot;
+    private Rigidbody[] _rbInBot;
+    private BoxCollider[] _boxCollidersInBot;
 
     void Start()
     {
-        i = 0;
         active = false;
-        RemoveRigAndCol();
-        XAndYOfPresent(workingarm);
+        RemovePhysics();
+        GetCurrentOffset();
         if (workingarm == null)
         {
-            // RefBotPositions();
             GetComponent<Animator>().enabled = true;
         }
         else
         {
-            xxx += workingArmRotation;
-            workingarm.transform.localRotation = isXArmRotation ? Quaternion.Euler(xxx, y, x) : Quaternion.Euler(x, y, xxx);
+            z += workingArmRotation;
+            workingarm.transform.localRotation = isXArmRotation ? Quaternion.Euler(z, y, x) : Quaternion.Euler(x, y, z);
         }
     }
-
-    float yRotationMin = 20f;
-    float yRotationMax = 160f;
     
     void Update()
     {
@@ -59,7 +55,7 @@ public class PlayerController : MonoBehaviour
             LeftShoulder.transform.LookAt(Gun);
             RightShoulder.transform.LookAt(Gun);
             Head.transform.LookAt(Gun);
-            Gun.transform.localRotation = Quaternion.Euler(0, 0, -xxx);
+            Gun.transform.localRotation = Quaternion.Euler(0, 0, -z);
             PlayerModel.transform.localEulerAngles = new Vector3(0f, Math.Abs(Gun.transform.localRotation.eulerAngles.z) * 0.9f, 0f);
 
 
@@ -81,15 +77,13 @@ public class PlayerController : MonoBehaviour
 
             if (tempWorkingArmRotation is >= 0 and < 180)
             {
-                yRotation = Mathf.Lerp(yRotationMin, yRotationMax, Mathf.InverseLerp(0f, 180f, tempWorkingArmRotation));
+                yRotation = Mathf.Lerp(bodyRotationMin, bodyRotationMax, Mathf.InverseLerp(0f, 180f, tempWorkingArmRotation));
             }
             else
             {
-                yRotation = Mathf.Lerp(yRotationMax, yRotationMin, Mathf.InverseLerp(180f, 360f, tempWorkingArmRotation));
+                yRotation = Mathf.Lerp(bodyRotationMax, bodyRotationMin, Mathf.InverseLerp(180f, 360f, tempWorkingArmRotation));
             }
 
-            // Debug.Log("new rotation: " + yRotation);
-            // Применение вращения ко второму объекту
             PlayerModel.transform.localRotation = Quaternion.Euler(0f, yRotation, 0f);
         }
 
@@ -97,64 +91,61 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetMouseButton(0))
             {
-                xxx += Input.GetAxis("Mouse X");
-                xxx -= Input.GetAxis("Mouse Y");
+                z += Input.GetAxis("Mouse X");
+                z -= Input.GetAxis("Mouse Y");
                 workingArmRotation += Input.GetAxis("Mouse X");
                 workingArmRotation -= Input.GetAxis("Mouse Y");
-                // if (workingArmRotation < 0)
-                // {
-                //     workingArmRotation += 360f;
-                // }
-                workingarm.transform.localRotation = isXArmRotation ? Quaternion.Euler(xxx, y, x) : Quaternion.Euler(x, y, xxx);
+                workingarm.transform.localRotation = isXArmRotation ? Quaternion.Euler(z, y, x) : Quaternion.Euler(x, y, z);
             }
         }
         
-        if (shoot && bullet == null)
+        if (shoot && _currentBullet == null)
         {
             active = true;
         }
     }
 
+    public void Disable() => active = false;
+    
     public void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Bullet"))
         {
-            KillThisBot();
-            //Destroy(bullet);
+            OnBotDeath();
             Destroy(collision.gameObject);
         }
 
         if (collision.gameObject.CompareTag("SuperBullet") || collision.gameObject.CompareTag("Hit"))
         {
-            KillThisBot();
+            OnBotDeath();
         }
     }
 
-    private void RemoveRigAndCol()
+    private void RemovePhysics()
     {
-        incolliders = GetComponentsInChildren<Collider>();
-        rigidbodies = GetComponentsInChildren<Rigidbody>();
-        boxColliders = GetComponentsInChildren<BoxCollider>();
+        _collidersInBot = GetComponentsInChildren<Collider>();
+        _rbInBot = GetComponentsInChildren<Rigidbody>();
+        _boxCollidersInBot = GetComponentsInChildren<BoxCollider>();
         
-        foreach (var bc in boxColliders)
+        foreach (var bc in _boxCollidersInBot)
             bc.transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ;
 
-        foreach (var cl in incolliders) cl.enabled = false;
-        foreach (var rb in rigidbodies) rb.isKinematic = true;
+        foreach (var cl in _collidersInBot) cl.enabled = false;
+        foreach (var rb in _rbInBot) rb.isKinematic = true;
 
         transform.GetComponent<CapsuleCollider>().enabled = true;
     }
 
-    public void KillThisBot()
+    public void OnBotDeath()
     {
         shoot = false;
         active = false;
-        foreach (var c in incolliders)
+        foreach (var c in _collidersInBot)
         {
             c.enabled = true;
         }
 
-        foreach (var rb in rigidbodies)
+        foreach (var rb in _rbInBot)
         {
             rb.isKinematic = false;
         }
@@ -163,7 +154,7 @@ public class PlayerController : MonoBehaviour
         if (gameObject.CompareTag("Emeny"))
         {
             tag = "Untagged";
-            GameManager.Instance.killcount();
+            GameManager.Instance.OnBotKilled();
         }
         else if (gameObject.CompareTag("Player")) GameManager.Instance.LevelFail();
 
@@ -176,46 +167,45 @@ public class PlayerController : MonoBehaviour
 
     public void Shoot()
     {
-        if (active && shootDelayPassed)
+        if (active && _shootDelayPassed)
         {
-            shootDelayPassed = false;
+            _shootDelayPassed = false;
             StartCoroutine(ShootDelay());
-            SendBullet();
+            SpawnBullet();
         }
     }
 
     private IEnumerator ShootDelay()
     {
         yield return new WaitForSeconds(2);
-        shootDelayPassed = true;
+        _shootDelayPassed = true;
     }
 
-    private void SendBullet()
+    private void SpawnBullet()
     {
         shootParticle.Stop();
         shootParticle.Play();
         
         if (Gun.GetComponent<RaycastReflection>().isKillableOnShot)
         {
-            KillThisBot();
-            Destroy(bullet);
+            OnBotDeath();
+            Destroy(_currentBullet);
             return;
         }
-        i = 0;
-        ListOfPoints.Clear();
+        _listOfPoints.Clear();
         Vector3[] temparray = new Vector3[Gun.GetComponent<LineRenderer>().positionCount];
         Gun.GetComponent<LineRenderer>().GetPositions(temparray);
-        ListOfPoints = temparray.ToList();
-        bullet = Instantiate(GameManager.Instance.Bullet, ListOfPoints[0], Quaternion.identity);
-        bullet.SetPath(ListOfPoints);
-        if (ListOfPoints.Count > 1)
+        _listOfPoints = temparray.ToList();
+        _currentBullet = Instantiate(GameManager.Instance.GetBullet(), _listOfPoints[0], Quaternion.identity);
+        _currentBullet.SetPath(_listOfPoints);
+        if (_listOfPoints.Count > 1)
         {
-            bullet.transform.LookAt(ListOfPoints[1]);
+            _currentBullet.transform.LookAt(_listOfPoints[1]);
         }
         shoot = true;
         if (SuperBullet)
         {
-            bullet.tag = "SuperBullet";
+            _currentBullet.tag = "SuperBullet";
         }
 
         if (AudioManager.instance)
@@ -235,28 +225,27 @@ public class PlayerController : MonoBehaviour
         });
     }
     
-    public void DanceForWin()
+    public void BotWin()
     {
         Gun.GetComponent<RaycastReflection>().enabled = false;
         Gun.GetComponent<LineRenderer>().enabled = false;
-        //if (bullet != null) Destroy(bullet);
         active = false;
 
     }
 
-    private void XAndYOfPresent(GameObject workingarm)
+    private void GetCurrentOffset()
     {
         if (isXArmRotation)
         {
             x = workingarm.transform.localEulerAngles.z;
             y = workingarm.transform.localEulerAngles.y;
-            xxx = workingarm.transform.localEulerAngles.x;
+            z = workingarm.transform.localEulerAngles.x;
         }
         else
         {
             x = workingarm.transform.localEulerAngles.x;
             y = workingarm.transform.localEulerAngles.y;
-            xxx = workingarm.transform.localEulerAngles.z;
+            z = workingarm.transform.localEulerAngles.z;
         }
 
         active = true;

@@ -6,62 +6,63 @@ using UnityEngine.SceneManagement;
 
 public class UiManager : MonoBehaviour
 {
-    public GameObject levelCompletedPanel;
-    public GameObject levelFailPanel;
-    public GameObject gamePanel;
-    public TextMeshProUGUI LevelNumber;
     public static UiManager Instance;
-    public bool desiontaken;
+    [SerializeField] private GameObject levelCompletedPanel;
+    [SerializeField] private GameObject levelFailPanel;
+    [SerializeField] private GameObject gamePanel;
+    [SerializeField] private GameObject menuButton;
+    [SerializeField] private GameObject nextButton;
+    [SerializeField] private TextMeshProUGUI LevelNumber;
     
-    
+    private bool _desiontaken;
+    private Coroutine _winCoroutine;
     
     private void Awake()
     {
-        if(!Instance)
-        {
-            Instance = this;
-        }
+        if(!Instance) Instance = this;
     }
+    
     void Start()
     {
+        menuButton.SetActive(true);
         levelCompletedPanel.SetActive(false);
         levelFailPanel.SetActive(false);
         gamePanel.SetActive(true);
-        DisplayLevelNumber();
+        SetLevel();
     }
-    
-    public void DisplayLevelNumber()
+
+    private void SetLevel() => LevelNumber.text = "Level " + SceneManager.GetActiveScene().buildIndex;
+
+    public void OnLevelCompleted()
     {
-        //LevelNumber = GetComponent<TextMeshProUGUI>();
-        LevelNumber.text = "Level " + PlayerPrefs.GetInt("level", 1);
-    }
-    
-    public void LevelCompleted()
-    {
-        if (!desiontaken)
+        menuButton.SetActive(false);
+        int activeSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        if (PlayerPrefs.GetInt("level") < activeSceneIndex + 1 && activeSceneIndex < SceneManager.sceneCountInBuildSettings - 1) PlayerPrefs.SetInt("level", activeSceneIndex + 1);
+        if (SceneManager.GetActiveScene().buildIndex >= SceneManager.sceneCountInBuildSettings - 1) nextButton.SetActive(false);
+        if (!_desiontaken)
         {
-            desiontaken = true;
+            _desiontaken = true;
             if (Particaleffect.instance)
             {
-                Particaleffect.instance.playpop();
+                Particaleffect.instance.PlayParticle();
             }
             
-            winCoroutine = StartCoroutine(win());
+            _winCoroutine = StartCoroutine(WinCoroutine());
         }
     }
 
-    private Coroutine winCoroutine;
 
     public void LevelFail()
     {
-        desiontaken = true;
-        StartCoroutine(loss());
+        menuButton.SetActive(false);
+        _desiontaken = true;
+        StartCoroutine(LoseCoroutine());
 
     }
 
-    IEnumerator loss()
+    private IEnumerator LoseCoroutine()
     {
-        if (winCoroutine != null) StopCoroutine(winCoroutine);
+        if (_winCoroutine != null) StopCoroutine(_winCoroutine);
         levelCompletedPanel.SetActive(false);
         yield return new WaitForSeconds(1f);
         gamePanel.SetActive(false);
@@ -72,7 +73,7 @@ public class UiManager : MonoBehaviour
         }
     }
 
-    IEnumerator win()
+    private IEnumerator WinCoroutine()
     {
         yield return new WaitForSeconds(1.5f);
         gamePanel.SetActive(false);
@@ -80,23 +81,15 @@ public class UiManager : MonoBehaviour
         if (AudioManager.instance) AudioManager.instance.Play("WIn");
     }
 
-    public void NextLevel()
+    public void SetNextLevel()
     {
-        if (PlayerPrefs.GetInt("level") >= (SceneManager.sceneCountInBuildSettings) - 1)
-        {
-            PlayerPrefs.SetInt("level", PlayerPrefs.GetInt("level", 1) + 1);
-            int i = Random.Range(1, (SceneManager.sceneCountInBuildSettings));
-            PlayerPrefs.SetInt("THISLEVEL", i);
-            SceneManager.LoadScene(i);
-        }
+        int activeSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        if (activeSceneIndex >= SceneManager.sceneCountInBuildSettings - 1) SceneManager.LoadScene(0);
         else
         {
-            PlayerPrefs.SetInt("level", SceneManager.GetActiveScene().buildIndex + 1);
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
-    public void Retry()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
+    
+    public void Retry() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 }

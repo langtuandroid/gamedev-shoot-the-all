@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class RaycastReflection : MonoBehaviour
 {
-	public int reflections;
+	[SerializeField] private int reflections;
 	private const float maxLength = 30f;
 
 	private LineRenderer lineRenderer;
@@ -46,15 +46,7 @@ public class RaycastReflection : MonoBehaviour
 				lineRenderer.positionCount += 1;
 				lineRenderer.SetPosition(lineRenderer.positionCount - 1, hit.point);
 				remainingLength -= Vector3.Distance(ray.origin, hit.point);
-				if (!hit.collider.CompareTag("Mirror"))
-				{
-					// if (hit.collider.CompareTag("Emeny") || hit.collider.CompareTag("Player") || hit.collider.CompareTag("Hit"))
-					// {
-					// 	lineRenderer.positionCount += 1;
-					// 	lineRenderer.SetPosition(lineRenderer.positionCount - 1, hit.point + ray.direction * 0.13f);
-					// }
-					break;
-				}
+				if (!hit.collider.CompareTag("Mirror")) break;
 				ray = new Ray(hit.point, Vector3.Reflect(ray.direction, hit.normal));
 			}
 			else
