@@ -5,7 +5,7 @@ using UnityEngine;
 using System.Linq;
 using DG.Tweening;
 
-public class PlayerController : MonoBehaviour
+public class SAPlayerController : MonoBehaviour
 {
     [SerializeField] private ParticleSystem shootParticle;
     [SerializeField] private GameObject LeftShoulder, RightShoulder, Head;
@@ -154,11 +154,11 @@ public class PlayerController : MonoBehaviour
         if (gameObject.CompareTag("Emeny"))
         {
             tag = "Untagged";
-            GameManager.Instance.OnBotKilled();
+            SAGameManager.Instance.OnBotKilled();
         }
-        else if (gameObject.CompareTag("Player")) GameManager.Instance.LevelFail();
+        else if (gameObject.CompareTag("Player")) SAGameManager.Instance.LevelFail();
 
-        Gun.GetComponent<RaycastReflection>().enabled = false;
+        Gun.GetComponent<SARaycastReflectionWorker>().enabled = false;
         Gun.GetComponent<LineRenderer>().enabled = false;
         GunModel.gameObject.SetActive(false);
         if (AudioManager.instance) AudioManager.instance.Play("Hit");
@@ -186,7 +186,7 @@ public class PlayerController : MonoBehaviour
         shootParticle.Stop();
         shootParticle.Play();
         
-        if (Gun.GetComponent<RaycastReflection>().isKillableOnShot)
+        if (Gun.GetComponent<SARaycastReflectionWorker>().isKillableOnShot)
         {
             OnBotDeath();
             Destroy(_currentBullet);
@@ -196,7 +196,7 @@ public class PlayerController : MonoBehaviour
         Vector3[] temparray = new Vector3[Gun.GetComponent<LineRenderer>().positionCount];
         Gun.GetComponent<LineRenderer>().GetPositions(temparray);
         _listOfPoints = temparray.ToList();
-        _currentBullet = Instantiate(GameManager.Instance.GetBullet(), _listOfPoints[0], Quaternion.identity);
+        _currentBullet = Instantiate(SAGameManager.Instance.GetBullet(), _listOfPoints[0], Quaternion.identity);
         _currentBullet.SetPath(_listOfPoints);
         if (_listOfPoints.Count > 1)
         {
@@ -227,7 +227,7 @@ public class PlayerController : MonoBehaviour
     
     public void BotWin()
     {
-        Gun.GetComponent<RaycastReflection>().enabled = false;
+        Gun.GetComponent<SARaycastReflectionWorker>().enabled = false;
         Gun.GetComponent<LineRenderer>().enabled = false;
         active = false;
 

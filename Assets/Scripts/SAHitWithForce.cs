@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Hit : MonoBehaviour
+public class SAHitWithForce : MonoBehaviour
 {
     [SerializeField] private Vector3 thisdirection;
    

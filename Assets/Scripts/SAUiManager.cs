@@ -4,9 +4,9 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 
-public class UiManager : MonoBehaviour
+public class SAUiManager : MonoBehaviour
 {
-    public static UiManager Instance;
+    public static SAUiManager Instance;
     [SerializeField] private GameObject levelCompletedPanel;
     [SerializeField] private GameObject levelFailPanel;
     [SerializeField] private GameObject gamePanel;
@@ -42,9 +42,9 @@ public class UiManager : MonoBehaviour
         if (!_desiontaken)
         {
             _desiontaken = true;
-            if (Particaleffect.instance)
+            if (SAParticleEffect.instance)
             {
-                Particaleffect.instance.PlayParticle();
+                SAParticleEffect.instance.PlayParticle();
             }
             
             _winCoroutine = StartCoroutine(WinCoroutine());

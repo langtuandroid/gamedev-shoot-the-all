@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class levelloder : MonoBehaviour
+public class SALevelLoader : MonoBehaviour
 {
     void Start()
     {

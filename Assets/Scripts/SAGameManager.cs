@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class GameManager : MonoBehaviour
+public class SAGameManager : MonoBehaviour
 {
     private const float DistanceToShoot = 0.003f;
     
     [SerializeField] private BulletController Bullet;
-    public static GameManager Instance;
+    public static SAGameManager Instance;
     private int _numberOfBotsToKill;
     private bool isEndGame = false;
 
@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
     public void Start()
     {
         _numberOfBotsToKill = 0;
-        PlayerController[] pc = FindObjectsOfType<PlayerController>();
+        SAPlayerController[] pc = FindObjectsOfType<SAPlayerController>();
         for (int i = 0; i < pc.Length; i++)
         {
             if (pc[i].transform.tag == "Emeny")
@@ -61,23 +61,23 @@ public class GameManager : MonoBehaviour
         if (_numberOfBotsToKill == 0)
         {
             isEndGame = true;
-            PlayerController[] pc = FindObjectsOfType<PlayerController>();
+            SAPlayerController[] pc = FindObjectsOfType<SAPlayerController>();
             for (int i = 0; i < pc.Length; i++)
             {
                 if (pc[i].transform.tag == "Player")
                 {
                     pc[i].BotWin();
-                    pc[i].GetComponent<PlayerController>().Disable();
-                    pc[i].GetComponent<PlayerController>().enabled = false;
+                    pc[i].GetComponent<SAPlayerController>().Disable();
+                    pc[i].GetComponent<SAPlayerController>().enabled = false;
                 }
             }
-            UiManager.Instance.OnLevelCompleted();
+            SAUiManager.Instance.OnLevelCompleted();
         }
     }
 
     private void Shoot()
     {
-        PlayerController[] pc = FindObjectsOfType<PlayerController>();
+        SAPlayerController[] pc = FindObjectsOfType<SAPlayerController>();
         for (int i = 0; i < pc.Length; i++)
         {
             pc[i].Shoot();
@@ -87,14 +87,14 @@ public class GameManager : MonoBehaviour
     public void LevelFail()
     {
         isEndGame = true;
-        PlayerController[] pc = FindObjectsOfType<PlayerController>();
+        SAPlayerController[] pc = FindObjectsOfType<SAPlayerController>();
         foreach (var t in pc)
         {
             t.BotWin();
-            t.GetComponent<PlayerController>().Disable();
-            t.GetComponent<PlayerController>().enabled = false;
+            t.GetComponent<SAPlayerController>().Disable();
+            t.GetComponent<SAPlayerController>().enabled = false;
         }
-        UiManager.Instance.LevelFail();
+        SAUiManager.Instance.LevelFail();
     }
 
     public BulletController GetBullet() => Bullet;

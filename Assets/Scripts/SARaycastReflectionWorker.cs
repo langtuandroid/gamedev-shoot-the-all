@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
-public class RaycastReflection : MonoBehaviour
+public class SARaycastReflectionWorker : MonoBehaviour
 {
 	[SerializeField] private int reflections;
 	private const float maxLength = 30f;

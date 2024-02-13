@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class bomb : MonoBehaviour
+public class SAExplosiveBomb : MonoBehaviour
 {
     [SerializeField] private List<GameObject> botsTokill;
     [SerializeField] private GameObject blasteffect;
@@ -25,7 +25,7 @@ public class bomb : MonoBehaviour
     {
         blasteffect.transform.parent = null;
         blasteffect.SetActive(true);
-        foreach (var bot in botsTokill) bot.GetComponent<PlayerController>().OnBotDeath();
+        foreach (var bot in botsTokill) bot.GetComponent<SAPlayerController>().OnBotDeath();
         Destroy(gameObject);
     }
 }

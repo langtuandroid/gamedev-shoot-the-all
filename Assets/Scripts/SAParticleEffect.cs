@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class Particaleffect : MonoBehaviour
+public class SAParticleEffect : MonoBehaviour
 {
-    public static Particaleffect instance;
+    public static SAParticleEffect instance;
 
     void Awake()
     {

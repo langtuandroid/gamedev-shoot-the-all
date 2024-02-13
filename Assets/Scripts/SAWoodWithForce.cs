@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class wood : MonoBehaviour
+public class SAWoodWithForce : MonoBehaviour
 {
     [SerializeField] public Vector3 thisdirection;
    

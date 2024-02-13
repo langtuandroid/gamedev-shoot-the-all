@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class MainMenuController : MonoBehaviour
+public class SAMainMenuController : MonoBehaviour
 {
     [SerializeField] private GameObject _backToMainMenuButton;
     [SerializeField] private GameObject _mainMenuPanel;
