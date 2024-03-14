@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using Sounds;
+using TMPro;
 using UnityEngine;
 
 public class SAAudioButtonController : MonoBehaviour
@@ -17,6 +18,6 @@ public class SAAudioButtonController : MonoBehaviour
         PlayerPrefs.SetInt("Audio", PlayerPrefs.GetInt("Audio", 0) == 0 ? 1 : 0);
         _audioDisabledImage.SetActive(PlayerPrefs.GetInt("Audio", 0) != 0);
         _audioText.text = PlayerPrefs.GetInt("Audio", 0) == 0 ? "Sound On" : "Sound Off";
-        AudioManager.instance.Play("Click");
+        SAAudioManager.instance.Play("Click");
     }
 }

@@ -211,8 +211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _levelEndedPanel: {fileID: 814873764307396060}
-  gamePanel: {fileID: 814873764224777641}
-  menuButton: {fileID: 5394312161672074764}
+  _menuButton: {fileID: 5394312161672074764}
   _restartButton: {fileID: 2600887847315312975}
   _nextLevelButton: {fileID: 6561078821042725308}
   _levelWinText: {fileID: 6007655052255276150}
@@ -1629,7 +1628,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 814873765757729110}
         m_TargetAssemblyTypeName: SAUiManager, Assembly-CSharp
-        m_MethodName: SetNextLevel
+        m_MethodName: NextLevelButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

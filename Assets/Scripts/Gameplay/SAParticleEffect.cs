@@ -1,18 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine;
 
 public class SAParticleEffect : MonoBehaviour
 {
-    public static SAParticleEffect instance;
+    public static SAParticleEffect Instance;
 
     void Awake()
     {
-        if (instance != null) Destroy(gameObject);
+        if (Instance != null) Destroy(gameObject);
         else
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
     }

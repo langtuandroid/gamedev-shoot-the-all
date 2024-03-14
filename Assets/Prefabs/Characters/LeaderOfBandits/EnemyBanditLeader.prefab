@@ -204,23 +204,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1142006716696e4d82e13d477ac1e33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shootParticle: {fileID: 8029275113704567048}
-  LeftShoulder: {fileID: 1192212896106532371}
-  RightShoulder: {fileID: 8935087463907647575}
-  Head: {fileID: 2470028982923275175}
-  Gun: {fileID: 3250489337266290209}
-  GunModel: {fileID: 7507779206554480464}
-  PlayerModel: {fileID: 8758742280972252272}
-  SuperBullet: 0
-  active: 1
-  shoot: 0
-  isLookAtGun: 1
-  isXArmRotation: 1
-  workingarm: {fileID: 8667762977019914720}
-  ListOfPoints: []
+  _shootParticle: {fileID: 8029275113704567048}
+  _leftShoulder: {fileID: 1192212896106532371}
+  _rightShoulder: {fileID: 8935087463907647575}
+  _head: {fileID: 2470028982923275175}
+  _gunTransform: {fileID: 3250489337266290209}
+  _gunVisual: {fileID: 7168373558304716266}
+  _playerModel: {fileID: 8758742280972252272}
+  _armToRotate: {fileID: 8667762977019914720}
   workingArmRotation: 180
-  gunAnimationOffset: -0.5
-  gunAnimationRotation: {x: -15, y: 0, z: 0}
+  _gunRotationOffset: -0.5
+  _gunRecoilAnimationOffset: {x: -15, y: 0, z: 0}
 --- !u!136 &8082987022167739360
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1331,6 +1325,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 15553db555b641e4287ef05aea40dc76, type: 3}
+--- !u!1 &7168373558304716266 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 15553db555b641e4287ef05aea40dc76, type: 3}
+  m_PrefabInstance: {fileID: 8050822138380355771}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7507779206554480464 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 15553db555b641e4287ef05aea40dc76, type: 3}
