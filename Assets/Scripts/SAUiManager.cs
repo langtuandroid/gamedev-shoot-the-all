@@ -7,12 +7,16 @@ using UnityEngine.SceneManagement;
 public class SAUiManager : MonoBehaviour
 {
     public static SAUiManager Instance;
-    [SerializeField] private GameObject levelCompletedPanel;
-    [SerializeField] private GameObject levelFailPanel;
+    [SerializeField] private GameObject _levelEndedPanel;
     [SerializeField] private GameObject gamePanel;
     [SerializeField] private GameObject menuButton;
-    [SerializeField] private GameObject nextButton;
-    [SerializeField] private TextMeshProUGUI LevelNumber;
+    [SerializeField] private GameObject _restartButton;
+    [SerializeField] private GameObject _nextLevelButton;
+    [SerializeField] private GameObject _levelWinText;
+    [SerializeField] private GameObject _levelLoseText;
+    [SerializeField] private TextMeshProUGUI _levelNumberText;
+    [SerializeField] private TextMeshProUGUI _levelEndNumberText;
+    [SerializeField] private List<GameObject> _starIcons;
     
     private bool _desiontaken;
     private Coroutine _winCoroutine;
@@ -25,20 +29,29 @@ public class SAUiManager : MonoBehaviour
     void Start()
     {
         menuButton.SetActive(true);
-        levelCompletedPanel.SetActive(false);
-        levelFailPanel.SetActive(false);
+        _levelEndedPanel.SetActive(false);
         gamePanel.SetActive(true);
         SetLevel();
     }
 
-    private void SetLevel() => LevelNumber.text = "Level " + SceneManager.GetActiveScene().buildIndex;
+    private void SetLevel()
+    {
+        _levelNumberText.text = "Level " + SceneManager.GetActiveScene().buildIndex;
+        _levelEndNumberText.text = SceneManager.GetActiveScene().buildIndex.ToString();
+    }
 
     public void OnLevelCompleted()
     {
+        StarsPanelController.Instance.DisableStars(_starIcons);
+        _levelWinText.SetActive(true);
+        _levelLoseText.SetActive(false);
+        _restartButton.SetActive(false);
+        _nextLevelButton.SetActive(true);
         menuButton.SetActive(false);
         int activeSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        StarsPanelController.Instance.SaveStars(activeSceneIndex);
         if (PlayerPrefs.GetInt("level") < activeSceneIndex + 1 && activeSceneIndex < SceneManager.sceneCountInBuildSettings - 1) PlayerPrefs.SetInt("level", activeSceneIndex + 1);
-        if (SceneManager.GetActiveScene().buildIndex >= SceneManager.sceneCountInBuildSettings - 1) nextButton.SetActive(false);
+        if (SceneManager.GetActiveScene().buildIndex >= SceneManager.sceneCountInBuildSettings - 1) _nextLevelButton.SetActive(false);
         if (!_desiontaken)
         {
             _desiontaken = true;
@@ -54,6 +67,11 @@ public class SAUiManager : MonoBehaviour
 
     public void LevelFail()
     {
+        foreach (var star in _starIcons) star.SetActive(false);
+        _levelWinText.SetActive(false);
+        _levelLoseText.SetActive(true);
+        _restartButton.SetActive(true);
+        _nextLevelButton.SetActive(false);
         menuButton.SetActive(false);
         _desiontaken = true;
         StartCoroutine(LoseCoroutine());
@@ -63,10 +81,9 @@ public class SAUiManager : MonoBehaviour
     private IEnumerator LoseCoroutine()
     {
         if (_winCoroutine != null) StopCoroutine(_winCoroutine);
-        levelCompletedPanel.SetActive(false);
         yield return new WaitForSeconds(1f);
         gamePanel.SetActive(false);
-        levelFailPanel.SetActive(true);
+        _levelEndedPanel.SetActive(true);
         if (AudioManager.instance)
         {
             AudioManager.instance.Play("loss");
@@ -77,7 +94,7 @@ public class SAUiManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
         gamePanel.SetActive(false);
-        levelCompletedPanel.SetActive(true);
+        _levelEndedPanel.SetActive(true);
         if (AudioManager.instance) AudioManager.instance.Play("WIn");
     }
 

@@ -165,14 +165,17 @@ public class SAPlayerController : MonoBehaviour
         enabled = false;
     }
 
-    public void Shoot()
+    public bool Shoot()
     {
         if (active && _shootDelayPassed)
         {
             _shootDelayPassed = false;
             StartCoroutine(ShootDelay());
             SpawnBullet();
+            return true;
         }
+
+        return false;
     }
 
     private IEnumerator ShootDelay()

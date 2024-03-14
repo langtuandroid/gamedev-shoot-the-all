@@ -57,6 +57,7 @@ public class SAGameManager : MonoBehaviour
 
     public void OnBotKilled()
     {
+        if (isEndGame) return;
         _numberOfBotsToKill--;
         if (_numberOfBotsToKill == 0)
         {
@@ -77,11 +78,14 @@ public class SAGameManager : MonoBehaviour
 
     private void Shoot()
     {
+        
         SAPlayerController[] pc = FindObjectsOfType<SAPlayerController>();
+        bool isShot = true;
         for (int i = 0; i < pc.Length; i++)
         {
-            pc[i].Shoot();
+            if (!pc[i].Shoot()) isShot = false;
         }
+        if(isShot) StarsPanelController.Instance.StarLost();
     }
 
     public void LevelFail()

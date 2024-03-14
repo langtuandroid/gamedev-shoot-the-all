@@ -1,40 +1,50 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SAMainMenuController : MonoBehaviour
 {
-    [SerializeField] private GameObject _backToMainMenuButton;
+    [SerializeField] private List<GameObject> _backToMainMenuButtons;
     [SerializeField] private GameObject _mainMenuPanel;
     [SerializeField] private GameObject _levelsPanel;
+    [SerializeField] private GameObject _settingsPanel;
 
     private void Start()
     {
-        
-        _backToMainMenuButton.SetActive(false);
+        SetMenuButtonsActivity(false);
         _levelsPanel.SetActive(false);
+        _settingsPanel.SetActive(false);
         _mainMenuPanel.SetActive(true);
     }
 
+    private void SetMenuButtonsActivity(bool state)
+    {
+        foreach (var button in _backToMainMenuButtons) button.SetActive(state);
+    }
+    
     public void SettingsButton()
     {
-        
+        _mainMenuPanel.SetActive(false);
+        SetMenuButtonsActivity(true);
+        _settingsPanel.SetActive(true);
+        _levelsPanel.SetActive(false);
+        AudioManager.instance.Play("Click");
     }
 
     public void PlayButton()
     {
-        _backToMainMenuButton.SetActive(true);
+        SetMenuButtonsActivity(true);
         _levelsPanel.SetActive(true);
         _mainMenuPanel.SetActive(false);
+        _settingsPanel.SetActive(false);
+        AudioManager.instance.Play("Click");
     }
-
+    
     public void BackToMainMenuButton()
     {
-        _backToMainMenuButton.SetActive(false);
+        SetMenuButtonsActivity(false);
         _levelsPanel.SetActive(false);
+        _settingsPanel.SetActive(false);
         _mainMenuPanel.SetActive(true);
-    }
-
-    public void ExitButton()
-    {
-        Application.Quit();
+        AudioManager.instance.Play("Click");
     }
 }

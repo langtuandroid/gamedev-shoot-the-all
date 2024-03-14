@@ -6,5 +6,9 @@ public class MainMenuButtonController : MonoBehaviour
 {
     [SerializeField] private Button _thisButton;
 
-    private void Start() => _thisButton.onClick.AddListener(() => SceneManager.LoadScene(0));
+    private void Start() => _thisButton.onClick.AddListener(() =>
+    {
+        AudioManager.instance.Play("Click");
+        SceneManager.LoadScene(0);
+    });
 }

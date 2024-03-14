@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 public class LevelGeneratorController : MonoBehaviour
 {
     [SerializeField] private LevelSelectButtonController _buttonPrefab;
+    [SerializeField] private GameObject _emptyPrefab;
     [SerializeField] private RectTransform _levelsPanel;
     
     void Start()
@@ -13,5 +14,8 @@ public class LevelGeneratorController : MonoBehaviour
             var levelButton = Instantiate(_buttonPrefab, _levelsPanel);
             levelButton.Initialize(i);
         }
+        Instantiate(_emptyPrefab, _levelsPanel);
+        Instantiate(_emptyPrefab, _levelsPanel);
+        Instantiate(_emptyPrefab, _levelsPanel);
     }
 }
