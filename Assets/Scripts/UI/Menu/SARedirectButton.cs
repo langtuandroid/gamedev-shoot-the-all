@@ -1,5 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,15 +16,20 @@ namespace UI.Menu
             GetComponent<Button>().onClick.AddListener(() =>
             {
                 foreach (var button in _buttonsToDisable) button.interactable = false;
-                Application.OpenURL(_link);
-                StartCoroutine(EnableButtons());
+                OpenURLAndEnableButtonAsync();
             });
         }
-
-        private IEnumerator EnableButtons()
+        
+        private async void OpenURLAndEnableButtonAsync()
         {
-            yield return new WaitForSeconds(2);
+            await OpenURL(_link);
             foreach (var button in _buttonsToDisable) button.interactable = true;
+        }
+    
+        private async Task OpenURL(string url)
+        {
+            await Task.Run(() => Process.Start(url));
+            await Task.Delay(1000);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using UI.Game;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,6 +15,7 @@ namespace Gameplay
         private Vector3 _firstMousePoint = Vector3.positiveInfinity;
         private int _amountOfBotsToKill;
         private bool _isEndGame;
+        private bool _shootDelayPassed = false;
         private float _timerTime;
     
         private void Awake()
@@ -32,11 +34,18 @@ namespace Gameplay
             {
                 if (playerController.transform.CompareTag("Emeny")) _amountOfBotsToKill++;
             }
+            StartCoroutine(ShootDelay());
         }
 
+        private IEnumerator ShootDelay()
+        {
+            yield return new WaitForSeconds(0.5f);
+            _shootDelayPassed = true;
+        }
+        
         public void Update()
         {
-            if (_isEndGame) return;
+            if (_isEndGame || !_shootDelayPassed) return;
             if (Input.GetMouseButton(0) && !EventSystem.current.currentSelectedGameObject)
             {
                 _firstMousePoint = Input.mousePosition;

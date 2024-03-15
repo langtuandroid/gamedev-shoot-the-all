@@ -724,9 +724,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Sniper
+  m_text: 'Spy
 
-    Ninja'
+    Ninja
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7d16c363b37f62342a02588dc7c48b3a, type: 2}
   m_sharedMaterial: {fileID: 857261566685985136, guid: 7d16c363b37f62342a02588dc7c48b3a, type: 2}
@@ -1235,6 +1237,7 @@ MonoBehaviour:
   - {fileID: 1789434968}
   - {fileID: 399916492}
   - {fileID: 2069431281}
+  - {fileID: 1638190991}
 --- !u!1 &422790578
 GameObject:
   m_ObjectHideFlags: 0
@@ -3525,9 +3528,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Sniper
+  m_text: 'Spy
 
-    Ninja'
+    Ninja
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7d16c363b37f62342a02588dc7c48b3a, type: 2}
   m_sharedMaterial: {fileID: 857261566685985136, guid: 7d16c363b37f62342a02588dc7c48b3a, type: 2}
@@ -3620,7 +3625,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -42.1}
+  m_AnchoredPosition: {x: 0, y: -42.100098}
   m_SizeDelta: {x: 0, y: 370.78003}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &1789434966
@@ -3762,6 +3767,7 @@ MonoBehaviour:
   - {fileID: 1789434968}
   - {fileID: 399916492}
   - {fileID: 2069431281}
+  - {fileID: 1638190991}
 --- !u!1 &1794217796
 GameObject:
   m_ObjectHideFlags: 0
