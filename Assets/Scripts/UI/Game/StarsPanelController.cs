@@ -1,13 +1,13 @@
 using System.Collections.Generic;
+using Scripts.Gameplay.Managers;
 using UnityEngine;
+using Zenject.SpaceFighter;
 
 namespace UI.Game
 {
     public class StarsPanelController : MonoBehaviour
     {
         public static StarsPanelController Instance;
-
-        public const string k_StarsOnLevelKey = "STARS_LEVEL";
 
         [SerializeField] private List<GameObject> _starIcons;
 
@@ -25,8 +25,7 @@ namespace UI.Game
 
         public void SaveStars(int level)
         {
-            if (!PlayerPrefs.HasKey(k_StarsOnLevelKey + level) || PlayerPrefs.GetInt(k_StarsOnLevelKey + level) < _currentStarAmount)
-                PlayerPrefs.SetInt(k_StarsOnLevelKey + level, _currentStarAmount);
+            if (!PlayerPrefsManager.HasStars(level) || PlayerPrefsManager.GetStars(level) < _currentStarAmount) PlayerPrefsManager.SetStars(level, _currentStarAmount);
         }
 
         public void DisableStars(List<GameObject> starIcons)

@@ -1,4 +1,5 @@
 using System;
+using Scripts.Gameplay.Managers;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -30,7 +31,7 @@ namespace Sounds
 
 		public void Play(string sound)
 		{
-			if (PlayerPrefs.GetInt("Audio" , 0) == 1) return;
+			if (PlayerPrefsManager.GetAudio() == 1) return;
 			SASound s = Array.Find(sounds, item => item.name == sound);
 			if (s == null)
 			{
@@ -43,20 +44,5 @@ namespace Sounds
 
 			s.source.Play();
 		}
-		public void Pause(string sound)
-		{
-			SASound s = Array.Find(sounds, item => item.name == sound);
-			if (s == null)
-			{
-				Debug.LogWarning("Sound: " + name + " not found!");
-				return;
-			}
-
-			s.source.volume = s.volume * (1f + UnityEngine.Random.Range(-s.volumeVariance / 2f, s.volumeVariance / 2f));
-			s.source.pitch = s.pitch * (1f + UnityEngine.Random.Range(-s.pitchVariance / 2f, s.pitchVariance / 2f));
-
-			s.source.Pause();
-		}
-
 	}
 }

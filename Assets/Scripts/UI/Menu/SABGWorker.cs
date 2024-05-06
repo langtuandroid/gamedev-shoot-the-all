@@ -7,10 +7,11 @@ namespace UI.Menu
     {
         [SerializeField] private List<GameObject> _phoneBGs;
         [SerializeField] private List<GameObject> _tabletBGs;
+        [SerializeField] private bool _overridePhone;
 
         void Start()
         {
-            var isPhone = CheckDeviceType();
+            var isPhone = _overridePhone || CheckDeviceType();
             foreach (var phoneBG in _phoneBGs) phoneBG.SetActive(isPhone);
             foreach (var tabletBG in _tabletBGs) tabletBG.SetActive(!isPhone);
         }

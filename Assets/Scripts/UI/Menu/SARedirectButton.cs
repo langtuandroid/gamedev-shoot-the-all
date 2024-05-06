@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 
 namespace UI.Menu
 {
@@ -28,7 +30,14 @@ namespace UI.Menu
     
         private async Task OpenURL(string url)
         {
-            await Task.Run(() => Process.Start(url));
+            try
+            {
+                Application.OpenURL(url);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("can't open the link");
+            }
             await Task.Delay(1000);
         }
     }

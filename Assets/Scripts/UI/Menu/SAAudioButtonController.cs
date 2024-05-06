@@ -1,4 +1,5 @@
-﻿using Sounds;
+﻿using Scripts.Gameplay.Managers;
+using Sounds;
 using TMPro;
 using UnityEngine;
 
@@ -9,15 +10,15 @@ public class SAAudioButtonController : MonoBehaviour
     
     private void Start()
     {
-        _audioDisabledImage.SetActive(PlayerPrefs.GetInt("Audio", 0) != 0);
-        _audioText.text = PlayerPrefs.GetInt("Audio", 0) == 0 ? "Sound On" : "Sound Off";
+        _audioDisabledImage.SetActive(PlayerPrefsManager.GetAudio() != 0);
+        _audioText.text = PlayerPrefsManager.GetAudio() == 0 ? "Sound On" : "Sound Off";
     }
     
     public void AudioButton()
     {
-        PlayerPrefs.SetInt("Audio", PlayerPrefs.GetInt("Audio", 0) == 0 ? 1 : 0);
-        _audioDisabledImage.SetActive(PlayerPrefs.GetInt("Audio", 0) != 0);
-        _audioText.text = PlayerPrefs.GetInt("Audio", 0) == 0 ? "Sound On" : "Sound Off";
+        PlayerPrefsManager.SetAudio(PlayerPrefsManager.GetAudio() == 0 ? 1 : 0);
+        _audioDisabledImage.SetActive(PlayerPrefsManager.GetAudio() != 0);
+        _audioText.text = PlayerPrefsManager.GetAudio() == 0 ? "Sound On" : "Sound Off";
         SAAudioManager.instance.Play("Click");
     }
 }

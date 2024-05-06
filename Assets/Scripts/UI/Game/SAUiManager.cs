@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Integration;
+using Managers;
+using Scripts.Gameplay.Managers;
 using Sounds;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Zenject;
 
 namespace UI.Game
 {
@@ -49,7 +53,7 @@ namespace UI.Game
             _menuButton.SetActive(false);
             int activeSceneIndex = SceneManager.GetActiveScene().buildIndex;
             StarsPanelController.Instance.SaveStars(activeSceneIndex);
-            if (PlayerPrefs.GetInt("level") < activeSceneIndex + 1 && activeSceneIndex < SceneManager.sceneCountInBuildSettings - 1) PlayerPrefs.SetInt("level", activeSceneIndex + 1);
+            if (PlayerPrefsManager.GetLevel() < activeSceneIndex + 1 && activeSceneIndex < SceneManager.sceneCountInBuildSettings - 1) PlayerPrefsManager.SetLevel(activeSceneIndex + 1);
             if (SceneManager.GetActiveScene().buildIndex >= SceneManager.sceneCountInBuildSettings - 1) _nextLevelButton.SetActive(false);
             if (!_isLevelCompleted)
             {

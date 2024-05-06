@@ -1,7 +1,10 @@
 using System.Collections;
+using Integration;
+using Managers;
 using UI.Game;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Zenject;
 
 namespace Gameplay
 {
@@ -11,6 +14,7 @@ namespace Gameplay
         private const float DistanceToShoot = 0.003f;
     
         [SerializeField] private SABulletController _bulletPrefab;
+        [Inject] private LevelEnterAdsManager _levelEnterAdsManager;
         
         private Vector3 _firstMousePoint = Vector3.positiveInfinity;
         private int _amountOfBotsToKill;
@@ -28,6 +32,7 @@ namespace Gameplay
 
         public void Start()
         {
+            _levelEnterAdsManager.LevelLoaded();
             _amountOfBotsToKill = 0;
             SAPlayerController[] playerControllers = FindObjectsOfType<SAPlayerController>();
             foreach (var playerController in playerControllers)
